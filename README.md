@@ -25,6 +25,7 @@ Tools used
 ## Authors
 
  + Eric Dacal Sánchez [ericdacal at github.com][dacal]
+ + Alberto Blanco Celdrán [DyaMetR at github.com][dyametr]
  + Pablo Blanco Celdrán [sigmasoldi3r at github.com][sigma]
 
 <!-- Links -->
@@ -33,3 +34,5 @@ Tools used
 [aseprite]: https://github.com/aseprite/aseprite/#aseprite
 [sigma]: https://github.com/sigmasoldi3r
 [dacal]: https://github.com/ericdacal
+[dyametr]: https://github.com/DyaMetR
+
