@@ -1,12 +1,10 @@
-# Legendary Journey
-
-_Provisional name_
+# Il Gatto
 
 A game for the [Open Game Jam 2021 at itch.io][jam]
 
 ## Notes
 
-Awaiting the game jam to start.
+Hey! I am Makkuro (真っ黒)![Makkuro's face](icon.png) and your mission is to pet me!
 
 ## References
 
