@@ -1,0 +1,85 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+
+# Game State
+# @author Alberto Blanco Celdrán
+# @date 02/10/2021 10:11
+# Stores the current game status.
+
+signal tick
+
+onready var tick: Timer = $tick
+onready var health: Node = $health
+
+export (float) var tick_rate = 1
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	tick.connect('timeout', self, '_on_tick')
+	tick.start(tick_rate)
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# Stops the game ticking.
+func stop_tick():
+	tick.stop()
+
+
+# Resumes game ticking.
+func resume_tick():
+	tick.start(tick_rate)
+
+
+# Resets all variables to default.
+func reset():
+	for child in get_children():
+		if child.has_method('reset'):
+			child.reset() # reset the child's value to default
+
+
+# Called on every game tick.
+func _on_tick():
+	emit_signal('tick', tick_rate)
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends 'res://scripts/need.gd'
+
+
+# Health
+# Declare member variables here. Examples:
+# @date 02/10/2021 10:23
+# Indicates how healthy is the cat -- the deciding factor in the game over
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# @override
+func _on_value_changed(old_value: float, new_value: float):
+	if new_value <= 0:
+		pass # TODO: implement Game Over state"
+
+[node name="game_state" type="Node"]
+script = SubResource( 1 )
+
+[node name="tick" type="Timer" parent="."]
+
+[node name="health" type="Node" parent="."]
+script = SubResource( 2 )
+max_value = 100.0
+default_value = 100.0
