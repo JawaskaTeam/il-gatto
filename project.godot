@@ -10,13 +10,22 @@ config_version=4
 
 _global_script_classes=[  ]
 _global_script_class_icons={
-
 }
 
 [application]
 
 config/name="game"
+run/main_scene="res://scenes/core.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+GameState="*res://data/game_state.tscn"
+
+[display]
+
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
 
 [rendering]
 
