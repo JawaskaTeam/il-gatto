@@ -10,6 +10,7 @@ config_version=4
 
 _global_script_classes=[  ]
 _global_script_class_icons={
+
 }
 
 [application]
@@ -21,7 +22,6 @@ config/icon="res://icon.png"
 [autoload]
 
 GameState="*res://data/game_state.tscn"
-StatMods="*res://data/stat_mods.tscn"
 
 [display]
 
