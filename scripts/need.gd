@@ -16,7 +16,7 @@ var value: float
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	GameState.connect('tick', self, 'tick')
-	set_value(value)
+	set_value(default_value)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
