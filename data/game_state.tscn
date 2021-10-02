@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scripts/vital_need.gd" type="Script" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -12,14 +14,17 @@ script/source = "extends Node
 signal tick
 
 onready var tick: Timer = $tick
+onready var date: Node = $date
 onready var health: Node = $health
+onready var hunger: Node = $hunger
+onready var thirst: Node = $thirst
 
 export (float) var tick_rate = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	tick.connect('timeout', self, '_on_tick')
-	tick.start(tick_rate)
+	tick.start()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -34,7 +39,7 @@ func stop_tick():
 
 # Resumes game ticking.
 func resume_tick():
-	tick.start(tick_rate)
+	tick.start()
 
 
 # Resets all variables to default.
@@ -50,6 +55,82 @@ func _on_tick():
 "
 
 [sub_resource type="GDScript" id=2]
+script/source = "extends 'res://scripts/game_variable.gd'
+
+
+# Calendar
+# @author Alberto Blanco Celdrán
+# @date 02/10/2021 13:59
+# Tracks the in-game current time.
+
+signal date_changed
+
+var day: int = 0 # current day
+var hour: int = 0 # current hour
+var minutes: int = 0 # current minutes
+var seconds: float = 0 # current seconds
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	GameState.connect('tick', self, 'tick')
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# Advances the calendar the given amount of seconds.
+# @param seconds elapsed
+func tick(delta: float):
+	# get the variables necessary for the transform
+	var total_hours: int = floor(delta / 3600)
+	var total_minutes: int = floor(delta / 60)
+	
+	# extract the different date components
+	var days: int = floor(delta / 86400)
+	var hours = total_hours  - (days * 24)
+	var minutes = total_minutes - (total_hours * 60)
+	var seconds: float = delta - (total_minutes * 60)
+	
+	# whether the seconds make a minute pass
+	self.seconds += seconds
+	if self.seconds >= 60:
+		minutes += 1
+		self.seconds = self.seconds - 60
+	
+	# whether the minutes make an hour pass
+	self.minutes += minutes
+	if self.minutes >= 60:
+		hours += 1
+		self.minutes = self.minutes - 60
+			
+	
+	# whether the hours make a day pass
+	self.hour += hours
+	if self.hour >= 24:
+		days += 1
+		self.hour = self.hour - 24
+	
+	# increase day
+	self.day += days
+	
+	# generic signal
+	if delta > 0:
+		emit_signal('date_changed', self.day, self.hour, self.minutes, self.seconds)
+
+
+# @override
+func reset():
+	day = 0
+	hour = 0
+	minutes = 0
+	seconds = 0
+	emit_signal('date_changed', day, hour, minutes, seconds)
+"
+
+[sub_resource type="GDScript" id=3]
 script/source = "extends 'res://scripts/need.gd'
 
 
@@ -72,14 +153,34 @@ func _ready():
 # @override
 func _on_value_changed(old_value: float, new_value: float):
 	if new_value <= 0:
-		pass # TODO: implement Game Over state"
+		pass # TODO: implement Game Over state
+"
 
 [node name="game_state" type="Node"]
 script = SubResource( 1 )
 
 [node name="tick" type="Timer" parent="."]
 
-[node name="health" type="Node" parent="."]
+[node name="date" type="Node" parent="."]
 script = SubResource( 2 )
+
+[node name="health" type="Node" parent="."]
+script = SubResource( 3 )
 max_value = 100.0
 default_value = 100.0
+
+[node name="hunger" type="Node" parent="."]
+script = ExtResource( 1 )
+max_value = 100.0
+default_value = 100.0
+_health = NodePath("../health")
+expense_rate = 1.0
+damage_rate = 2.0
+
+[node name="thirst" type="Node" parent="."]
+script = ExtResource( 1 )
+max_value = 100.0
+default_value = 100.0
+_health = NodePath("../health")
+expense_rate = 3.0
+damage_rate = 5.0
