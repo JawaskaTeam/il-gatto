@@ -11,25 +11,26 @@
 position = Vector2( 107.053, 66.1117 )
 frames = ExtResource( 2 )
 animation = "idle"
-frame = 2
+frame = 1
 playing = true
 
 [node name="jodete" type="AnimatedSprite" parent="."]
 position = Vector2( 235.788, 67.4481 )
 frames = ExtResource( 2 )
 animation = "meow"
-frame = 2
+frame = 1
 playing = true
 
 [node name="cabron" type="AnimatedSprite" parent="."]
 position = Vector2( 103.044, 145.402 )
 frames = ExtResource( 2 )
 animation = "blink_meow"
+frame = 4
 playing = true
 
 [node name="=)" type="AnimatedSprite" parent="."]
 position = Vector2( 239.351, 141.838 )
 frames = ExtResource( 2 )
 animation = "blink"
-frame = 4
+frame = 3
 playing = true

@@ -11,19 +11,22 @@ script/source = "extends Node2D
 # @date 02/10/2021 15:00
 # Physical representation of the cat in the hub.
 
+signal reached_destination
+signal halted_movement
+
 onready var tick: Timer = $tick
 
 export (float) var walk_speed # how fast does the cat move
 
 var move_pos: Vector2 # where the cat will try to go
 var is_moving: bool # whether the cat is moving
-var idle: bool # prevents the cat from moving
+var activity: Node # current activity
 
-# TODO: behaviours
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	go_to(Vector2(300, 300))
+	set_activity(load('res://scripts/action.gd'))
+	#go_to(Vector2(300, 300))
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -36,6 +39,22 @@ func _physics_process(delta):
 	_handle_movement(delta)
 
 
+# Stops the current activity.
+func stop_activity():
+	if self.activity:
+		self.activity._on_activity_end() # end activity
+		self.activity.queue_free() # remove activity
+
+
+# Starts a new activity.
+# @param activity node path
+func set_activity(activity: PackedScene):
+	stop_activity()
+	self.activity = activity.instance()
+	self.activity.cat = self
+	self.activity._on_start()
+
+
 # Makes the cat move to a certain location
 # @param target location
 func go_to(target: Vector2):
@@ -46,18 +65,20 @@ func go_to(target: Vector2):
 # Makes the cat stop on their tracks.
 func stop():
 	is_moving = false
+	emit_signal('halted_movement')
 
 
 # Handles cat movement.
 # @param physics delta
 func _handle_movement(delta: float):
-	if not idle and is_moving:
+	if is_moving:
 		# move towards the desired location
 		global_transform.origin = global_transform.origin.move_toward(move_pos, delta * walk_speed)
 		
 		# once the location has been reached, stop moving
 		if global_transform.origin == move_pos:
 			is_moving = false
+			emit_signal('reached_destination')
 "
 
 [node name="cat_roam" type="Node2D"]
