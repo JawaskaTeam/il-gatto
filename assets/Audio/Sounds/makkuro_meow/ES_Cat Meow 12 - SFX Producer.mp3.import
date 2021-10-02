@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/ES_Cat Meow 12 - SFX Producer.mp3-68209a90a74feb50dfb026eddd0f2122.mp3str"
+
+[deps]
+
+source_file="res://assets/Audio/Sounds/makkuro_meow/ES_Cat Meow 12 - SFX Producer.mp3"
+dest_files=[ "res://.import/ES_Cat Meow 12 - SFX Producer.mp3-68209a90a74feb50dfb026eddd0f2122.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0
