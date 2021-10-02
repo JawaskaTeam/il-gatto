@@ -6,7 +6,9 @@ extends 'res://scripts/need.gd'
 # @date 02/10/2021 13:48
 # A need that will constantly decrease and upon reaching 0, it will affect health
 
-export (NodePath) var health
+onready var health: Node = get_node(_health)
+
+export (NodePath) var _health
 export (float) var expense_rate # how much is decreased per tick
 export (float) var damage_rate # how much health it decreases per tick upon reaching 0
 
