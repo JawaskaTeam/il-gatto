@@ -23,17 +23,15 @@ func _ready():
 #func _process(delta):
 #	pass
 
-func tick(delta: float):
-	pass
-
 
 # Changes the value and emits the signal.
 # @param new value
 func set_value(value: float):
-	value = clamp(value, 0, max_value) # clamp the parameter
-	_on_value_changed(self.value, value) # call the event
-	emit_signal('changed', self.value, value) # emit signal
-	self.value = value # change value
+	if self.value != value: # only change if it's different
+		value = clamp(value, 0, max_value) # clamp the parameter
+		_on_value_changed(self.value, value) # call the event
+		emit_signal('changed', self.value, value) # emit signal
+		self.value = value # change value
 
 
 # Returns the current value.
@@ -43,6 +41,8 @@ func get_value() -> float:
 
 
 # Called internally when the value changes.
+# @param value before changing
+# @param current value
 func _on_value_changed(old_value: float, new_value: float):
 	pass
 

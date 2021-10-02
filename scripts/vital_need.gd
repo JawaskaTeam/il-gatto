@@ -1,4 +1,4 @@
-extends 'res://scripts/need.gd'
+extends 'res://scripts/mood_need.gd'
 
 
 # Vital need
@@ -23,8 +23,7 @@ func _ready():
 #	pass
 
 
-# Applies expense or damage
-# @param how many ticks occured
+# @override
 func tick(delta: float):
 	if get_value() > 0:
 		set_value(value - (expense_rate * delta))
