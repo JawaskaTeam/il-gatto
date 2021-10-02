@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scripts/vital_need.gd" type="Script" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -50,7 +52,7 @@ func _on_tick():
 "
 
 [sub_resource type="GDScript" id=2]
-script/source = "extends 'res://scripts/need.gd'
+script/source = "extends 'res://scripts/needs/need.gd'
 
 
 # Health
@@ -72,7 +74,8 @@ func _ready():
 # @override
 func _on_value_changed(old_value: float, new_value: float):
 	if new_value <= 0:
-		pass # TODO: implement Game Over state"
+		pass # TODO: implement Game Over state
+"
 
 [node name="game_state" type="Node"]
 script = SubResource( 1 )
@@ -83,3 +86,19 @@ script = SubResource( 1 )
 script = SubResource( 2 )
 max_value = 100.0
 default_value = 100.0
+
+[node name="hunger" type="Node" parent="."]
+script = ExtResource( 1 )
+max_value = 100.0
+default_value = 100.0
+health = NodePath("../health")
+expense_rate = 1.0
+damage_rate = 2.0
+
+[node name="thirst" type="Node" parent="."]
+script = ExtResource( 1 )
+max_value = 100.0
+default_value = 100.0
+health = NodePath("../health")
+expense_rate = 3.0
+damage_rate = 5.0
