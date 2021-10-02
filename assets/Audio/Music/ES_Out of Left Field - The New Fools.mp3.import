@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/ES_Out of Left Field - The New Fools.mp3-e6b69d2dd7df3e12370f309f768a07c0.mp3str"
+
+[deps]
+
+source_file="res://assets/Audio/Music/ES_Out of Left Field - The New Fools.mp3"
+dest_files=[ "res://.import/ES_Out of Left Field - The New Fools.mp3-e6b69d2dd7df3e12370f309f768a07c0.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0
