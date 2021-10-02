@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scripts/vital_need.gd" type="Script" id=1]
 
@@ -18,6 +18,8 @@ onready var date: Node = $date
 onready var health: Node = $health
 onready var hunger: Node = $hunger
 onready var thirst: Node = $thirst
+onready var hygene: Node = $hygene
+onready var mood: Node = $mood
 
 export (float) var tick_rate = 1
 
@@ -131,13 +133,41 @@ func reset():
 "
 
 [sub_resource type="GDScript" id=3]
-script/source = "extends 'res://scripts/need.gd'
+script/source = "extends 'res://scripts/mood_need.gd'
 
 
 # Health
 # Declare member variables here. Examples:
 # @date 02/10/2021 10:23
 # Indicates how healthy is the cat -- the deciding factor in the game over
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# @override
+func _on_value_changed(_old: float, value: float):
+	._on_value_changed(_old, value)
+	if value <= 0: # game over
+		pass # TODO: implement Game Over state
+"
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends 'res://scripts/mood_need.gd'
+
+
+# Hygene
+# @author Alberto Blanco Celdrán
+# @date 02/10/2021 17:47
+# Represents the current cat's hygene.
+
+export (float) var decrease_rate
 
 
 # Called when the node enters the scene tree for the first time.
@@ -151,9 +181,61 @@ func _ready():
 
 
 # @override
-func _on_value_changed(old_value: float, new_value: float):
-	if new_value <= 0:
-		pass # TODO: implement Game Over state
+func tick(delta: float):
+	set_value(get_value() - (decrease_rate * delta))
+"
+
+[sub_resource type="GDScript" id=5]
+script/source = "extends 'res://scripts/need.gd'
+
+
+# Mood
+# @author Alberto Blanco Celdrán
+# @date 02/10/2021 17:54
+# Represent's the current cat's mood
+
+var mods: Dictionary
+var negative_mods: Dictionary # these prevent the effects of good
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# Adds a stat modifier to be applied each tick.
+# @param name
+# @param value
+func add_modifier(name: String, value: float):
+	mods[name] = value
+	if value < 0:
+		negative_mods[name] = true
+	else:
+		negative_mods.erase(name)
+
+
+# Removes a stat modified.
+func remove_modifier(name: String):
+	mods.erase(name)
+	negative_mods.erase(name)
+
+
+# @override
+func tick(delta: float):
+	# get the final value to add
+	var value: float
+	if negative_mods.size() > 0:
+		for mod in negative_mods:
+			value += mods.get(mod)
+	else:
+		for mod in mods:
+			value += mods.get(mod)
+	set_value(get_value() + (value * delta))
 "
 
 [node name="game_state" type="Node"]
@@ -168,11 +250,19 @@ script = SubResource( 2 )
 script = SubResource( 3 )
 max_value = 100.0
 default_value = 100.0
+mood_penalty = 0.1
+mood_recovery = 0.1
+low_threshold = 40.0
+high_threshold = 60.0
 
 [node name="hunger" type="Node" parent="."]
 script = ExtResource( 1 )
 max_value = 100.0
 default_value = 100.0
+mood_penalty = 0.1
+mood_recovery = 0.1
+low_threshold = 40.0
+high_threshold = 70.0
 _health = NodePath("../health")
 expense_rate = 1.0
 damage_rate = 2.0
@@ -181,6 +271,25 @@ damage_rate = 2.0
 script = ExtResource( 1 )
 max_value = 100.0
 default_value = 100.0
+mood_penalty = 0.1
+mood_recovery = 0.1
+low_threshold = 30.0
+high_threshold = 60.0
 _health = NodePath("../health")
 expense_rate = 3.0
 damage_rate = 5.0
+
+[node name="hygene" type="Node" parent="."]
+script = SubResource( 4 )
+max_value = 100.0
+default_value = 100.0
+mood_penalty = 0.1
+mood_recovery = 0.1
+low_threshold = 33.0
+high_threshold = 75.0
+decrease_rate = 1.0
+
+[node name="mood" type="Node" parent="."]
+script = SubResource( 5 )
+max_value = 100.0
+default_value = 100.0
