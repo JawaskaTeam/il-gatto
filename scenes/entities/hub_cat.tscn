@@ -1,0 +1,395 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://animations/makkuro.tres" type="SpriteFrames" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+
+# Roaming cat
+# @author Alberto Blanco Celdrán
+# @date 02/10/2021 15:00
+# Physical representation of the cat in the hub.
+
+signal stopped_moving
+
+enum ANIMATION_VARIANT { Idle, Meow, Blink, MeowBlink }
+
+onready var sprite: AnimatedSprite = $sprite
+onready var meow_delay: Timer = $meow_delay
+onready var meow: AudioStreamPlayer2D = $meow
+onready var blink: Timer = $blink
+onready var random := RandomNumberGenerator.new()
+onready var meows: Array = []
+onready var animation_variants: Dictionary = {
+	'idle': AnimationVariant.new('blink', 'meow', 'blink_meow')
+}
+onready var action_walk: Node = $walk
+onready var action_idle: Node = $idle
+onready var action_wait: Node = $wait_anim
+
+export (float) var max_meow_delay # longest time without meowing
+export (float) var min_meow_delay # shortest time without meowing
+export (float) var blink_frequency # how often does the cat blink
+export (float) var blink_meow_margin # time difference between meow and blink for making both
+export (float) var walk_speed # how fast does the cat move
+export (float) var max_sit_time # longest time sitting down
+export (float) var min_sit_time # shortest time sitting down
+export (float) var max_distance # longest distance that the cat will walk
+export (Rect2) var walkable_space # where can the cat walk by
+
+# movement
+var move_pos: Vector2 # where the cat will try to go
+var is_moving: bool # whether the cat is moving
+
+# animation
+var is_variant_playing: bool # whether the sprite is running a variant animation
+var previous_animation: String # which animation was playing previous to the variant
+
+# action queue
+var queue: Array = [] # actions awaiting to be called
+var active_action: Node # current action waiting to be finished
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	# load meowing sounds
+	for i in range(1, 12):
+		meows.push_front(load(str('res://assets/Audio/Sounds/makkuro_meow/meow', i, '.mp3')))
+	
+	# initialize meow delay
+	meow_delay.connect('timeout', self, '_on_meow')
+	next_meow() # setup first meow
+	meow_delay.start() # start meow timer
+	
+	# initialize blinking
+	blink.connect('timeout', self, '_on_blink')
+	blink.start(blink_frequency) # start blink timer
+	
+	# connect sprite animation ending
+	sprite.connect('animation_finished', self, '_on_animation_ended')
+	
+	# the cat will spawn sitting down
+	sit()
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# Called every physics frame. 'delta' is the elapsed time since the previous frame.
+func _physics_process(delta):
+	_handle_movement(delta)
+	
+
+# Makes the cat move to a certain location
+# @param target location
+func go_to(target: Vector2):
+	move_pos = target
+	is_moving = true
+
+
+# Makes the cat stop on their tracks.
+func stop_moving():
+	is_moving = false
+	emit_signal('stopped_moving')
+
+
+# Used when playing animations with variants. It will be ignored if the same animation is already running.
+# @param animation
+# @param variant to play
+func play_animation_variant(animation: String, variant: int = ANIMATION_VARIANT.Idle):
+	var previous = animation # store the previous animation used
+	
+	# if we have an animation variant, select it
+	if animation_variants.has(animation):
+		var variants: AnimationVariant = animation_variants[animation]
+		match variant:
+			ANIMATION_VARIANT.Meow:
+				animation = variants.meow
+			ANIMATION_VARIANT.Blink:
+				animation = variants.blink
+			ANIMATION_VARIANT.MeowBlink:
+				animation = variants.meow_blink
+
+	# play the selected animation
+	if animation != sprite.animation:
+		is_variant_playing = true
+		previous_animation = previous
+		sprite.play(animation)
+
+
+# Sets a new delay for the next meow.
+func next_meow():
+	meow_delay.set_wait_time(random.randi_range(min_meow_delay, max_meow_delay))
+
+
+# Whether the cat should meow and blink at the same time.
+# @return should do both
+func is_meow_blink_valid() -> bool:
+	return blink.time_left < blink_meow_margin and meow_delay.time_left < blink_meow_margin
+
+
+# Queues the given action.
+# @param action
+# @param arguments
+func add_action(action: Node, args: Array = []):
+	queue.push_back(QueuedAction.new(action, args))
+	
+	# automatically run the action if there aren't any other running
+	if not active_action:
+		next_action()
+
+
+# Starts the next action.
+func next_action():
+	if queue.size() > 0:
+		var action = queue[0]
+		action.action.connect('action_ended', self, '_on_action_ended')
+		active_action = action.action
+		action.action.start(action.args)
+		queue.remove(0)
+
+
+# Skips the current action.
+func skip_action():
+	if active_action:
+		active_action.stop()
+		active_action = null
+	next_action()
+
+
+# Clears all actions.
+func clear_actions():
+	queue.clear()
+
+
+# Queues a walking action to a random location.
+func walk():
+	# get the origin
+	var pos = transform.origin
+
+	# calculate where the cat is relatively going to
+	var x = random.randi_range(-max_distance, max_distance)
+	var y = random.randi_range(-max_distance, max_distance)
+
+	# calculate new position
+	var new_pos = Vector2(clamp(pos.x + x, walkable_space.position.x, walkable_space.end.x), clamp(pos.y + y, walkable_space.position.y, walkable_space.end.y))
+	add_action(action_walk, [new_pos])
+
+
+# Queues a sitting action.
+func sit():
+	add_action(action_idle, [random.randi_range(min_sit_time, max_sit_time)])
+
+
+# Chooses the next action that the cat should perform.
+# @param last action performed
+func _choose_behaviour(last_action: Node):
+	match last_action:
+		action_walk:
+			sit()
+		action_idle:
+			walk()
+
+
+# Handles cat movement.
+# @param physics delta
+func _handle_movement(delta: float):
+	if is_moving:
+		# move towards the desired location
+		transform.origin = transform.origin.move_toward(move_pos, delta * walk_speed)
+		
+		# once the location has been reached, stop moving
+		if transform.origin == move_pos:
+			stop_moving()
+
+
+# Called when the cat's supposed to meow.
+func _on_meow():
+	# if there's already a variant being played, do not override
+	if is_variant_playing:
+		return
+	
+	# select animation
+	var variant = ANIMATION_VARIANT.Meow
+	if is_meow_blink_valid():
+		variant = ANIMATION_VARIANT.MeowBlink
+	
+	# play animation
+	play_animation_variant(sprite.animation, variant) # play animation variant
+	meow.set_stream(meows[random.randi_range(1, 12)]) # select sound to play
+	meow.play() # play selected sound
+
+
+# Called when the cat's supposed to blink.
+func _on_blink():
+	# if there's already a variant being played, do not override
+	if is_variant_playing:
+		return
+	
+	# select animation
+	var variant = ANIMATION_VARIANT.Blink
+	if is_meow_blink_valid():
+		variant = ANIMATION_VARIANT.MeowBlink
+	
+	# play animation
+	play_animation_variant(sprite.animation, variant)
+
+
+# Called when the current animation ends.
+func _on_animation_ended():
+	if is_variant_playing:
+		sprite.play(previous_animation)
+		is_variant_playing = false
+
+
+# Called when an action ended. Triggering the next one.
+func _on_action_ended(action: Node):
+	_choose_behaviour(action)
+	action.disconnect('action_ended', self, '_on_action_ended')
+	active_action = null
+	next_action()
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends 'res://scripts/action.gd'
+
+
+# Walking action
+# @author Alberto Blanco Celdrán
+# @date 03/10/2021 23:56
+# Makes the cat walk from one point to another.
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# @override
+func start(args: Array = []):
+	if args.size() <= 0:
+		push_error('No position specified.')
+	cat.connect('stopped_moving', self, 'end')
+	cat.go_to(args[0])
+	.start(args)
+
+
+# @override
+func end():
+	cat.disconnect('stopped_moving', self, 'end')
+	.end()
+"
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends 'res://scripts/action.gd'
+
+
+# Idle action
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 00:02
+# Waits a certain amount of time before proceeding.
+
+onready var timer: Timer = $timer
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	timer.connect('timeout', self, 'end')
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# @override
+func start(args: Array = []):
+	if args.size() <= 0:
+		push_error('No position specified.')
+	timer.start(args[0])
+	.start(args)
+
+
+# @override
+func end():
+	timer.stop()
+	.end()
+"
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends 'res://scripts/action.gd'
+
+
+# Wait action
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 00:19
+# Runs an animation that pauses the queue.
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# @override
+func start(args: Array = []):
+	# play animation only if provided
+	if args.size() > 0:
+		cat.sprite.play(args[0])
+	cat.sprite.connect('animation_finished', self, 'end')
+	.start(args)
+
+
+# @override
+func end():
+	cat.sprite.disconnect('animation_finished', self, 'end')
+	.end()
+"
+
+[node name="cat" type="Node2D"]
+script = SubResource( 1 )
+max_meow_delay = 20.0
+min_meow_delay = 6.0
+blink_frequency = 5.0
+blink_meow_margin = 1.0
+walk_speed = 5.0
+max_sit_time = 2.0
+min_sit_time = 1.0
+max_distance = 300.0
+walkable_space = Rect2( -100, -100, 200, 200 )
+
+[node name="sprite" type="AnimatedSprite" parent="."]
+frames = ExtResource( 1 )
+animation = "idle"
+frame = 1
+playing = true
+
+[node name="meow_delay" type="Timer" parent="."]
+
+[node name="blink" type="Timer" parent="."]
+
+[node name="meow" type="AudioStreamPlayer2D" parent="."]
+
+[node name="walk" type="Node" parent="."]
+script = SubResource( 2 )
+
+[node name="idle" type="Node" parent="."]
+script = SubResource( 3 )
+
+[node name="timer" type="Timer" parent="idle"]
+one_shot = true
+
+[node name="wait_anim" type="Node" parent="."]
+script = SubResource( 4 )

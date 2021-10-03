@@ -19,13 +19,14 @@ playing = true
 position = Vector2( 235.788, 67.4481 )
 frames = ExtResource( 2 )
 animation = "meow"
-frame = 1
+frame = 3
 playing = true
 
 [node name="cabron" type="AnimatedSprite" parent="."]
 position = Vector2( 103.044, 145.402 )
 frames = ExtResource( 2 )
 animation = "blink_meow"
+frame = 4
 playing = true
 
 [node name="=)" type="AnimatedSprite" parent="."]

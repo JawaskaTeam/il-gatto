@@ -5,7 +5,7 @@
 [ext_resource path="res://data/actions/wait_animation.tscn" type="PackedScene" id=3]
 
 [sub_resource type="GDScript" id=1]
-script/source = "extends 'res://scripts/activity.gd'
+script/source = "extends 'res://scripts/_activity.gd'
 
 
 # Roam around

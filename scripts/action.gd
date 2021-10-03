@@ -3,12 +3,12 @@ extends Node
 
 # Action
 # @author Alberto Blanco Celdrán
-# @date 03/10/2021 10:02
-# An atomic action by the cat.
+# @date 03/10/2021 22:50
+# A queueable cat action
 
 signal action_ended
 
-onready var cat: Node2D = get_parent().get_parent() # get cat from activity
+onready var cat: Node2D = get_parent()
 
 
 # Called when the node enters the scene tree for the first time.
@@ -21,18 +21,17 @@ func _ready():
 #	pass
 
 
-# Called to start the action.
-# @param action initialization arguments
+# Resets the action.
+func reset():
+	pass
+
+
+# Starts the action.
+# @param variant arguments
 func start(args: Array = []):
-	pass
+	reset()
 
 
-# Halts the action.
-func stop():
-	pass
-
-
-# Called when the action has ended naturally, emitting the signal.
-func _on_action_ended():
-	stop() # end the action
+# Ends the action.
+func end():
 	emit_signal('action_ended', self)
