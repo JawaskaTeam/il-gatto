@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends 'res://scripts/action.gd'
+
+
+# Animation action
+# @author Alberto Blanco Celdrán
+# @data 03/10/2021 18:23
+# An action that waits for an animation to end.
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# @override
+func start(args: Array = []):
+	# push an error if no animation was specified
+	if args.size() <= 0:
+		push_error('No animation specified.')
+	
+	# make cat play the animation and wait for it's end
+	cat.sprite.stop() # stop current animation
+	cat.sprite.connect('animation_finished', self, '_on_action_ended') # connect animated sprite
+	cat.sprite.play(args[0]) # play animation
+
+
+# @override
+func _on_action_ended():
+	cat.sprite.disconnect('animation_finished', self, '_on_action_ended')
+	._on_action_ended()
+"
+
+[node name="wait_animation" type="Node"]
+script = SubResource( 1 )

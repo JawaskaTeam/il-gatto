@@ -1,0 +1,112 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://data/actions/walk_to.tscn" type="PackedScene" id=1]
+[ext_resource path="res://data/actions/idle.tscn" type="PackedScene" id=2]
+[ext_resource path="res://data/actions/wait_animation.tscn" type="PackedScene" id=3]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends 'res://scripts/activity.gd'
+
+
+# Roam around
+# @author Alberto Blanco Celdrán
+# @date 03/10/2021 15:38
+# Makes the cat roam around, occasionally stopping to take a nap.
+
+onready var meow: Timer = $meow
+onready var walk_to: Node = $walk_to
+onready var idle: Node = $idle
+onready var wait_animation: Node = $wait_animation
+onready var random := RandomNumberGenerator.new()
+
+export (Rect2) var walkable_space # walkable space
+export (float) var max_walk_distance # maximum distance walked by the cat
+export (float) var max_sit_duration # longest time the cat can be sitting for
+export (float) var min_sit_duration # shortest time the cat can be sitting for
+export (float) var max_meow_delay # longest time without meowing
+export (float) var min_meow_delay # shortest time without meowing
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# @override
+func start(args: Array = []):
+	roll()
+
+
+# Decides the cat's next action.
+func roll():
+	pass
+
+
+# Decides a random location to walk towards to.
+func walk():
+	match cat.status:
+		STATUS.Sitting:
+			start_action(wait_animation, ['blink'])
+		STATUS.Walking:
+			# get the origin
+			var pos = cat.transform.origin
+			
+			# calculate where the cat is relatively going to
+			var x = random.randi_range(-max_walk_distance, max_walk_distance)
+			var y = random.randi_range(-max_walk_distance, max_walk_distance)
+			
+			# calculate new position
+			var new_pos = Vector2(clamp(pos.x + x, walkable_space.position.x, walkable_space.end.x), clamp(pos.y + y, walkable_space.position.y, walkable_space.end.y))
+			start_action(walk_to, [new_pos])
+	cat.status = STATUS.Walking
+
+
+# Makes the cat sit for some time.
+func sit():
+	start_action(idle, [random.randi_range(min_sit_duration, max_sit_duration)])
+
+
+# Called when the walk ended.
+func _on_walk_ended():
+	roll()
+
+
+# Called when the idle action ended.
+func _on_idle_ended():
+	roll()
+
+
+# Called when an animation action has ended.
+func _on_animation_ended():
+	match cat.status:
+		STATUS.Walking:
+			walk()
+		STATUS.Sitting:
+			sit()
+
+
+# Called when the cat has stopped an action
+func _on_action_ended(action: Node):
+	._on_action_ended(action)
+	match action:
+		walk_to:
+			_on_walk_ended()
+		wait_animation:
+			_on_animation_ended()
+"
+
+[node name="roam_around" type="Node"]
+script = SubResource( 1 )
+
+[node name="walk_to" parent="." instance=ExtResource( 1 )]
+
+[node name="idle" parent="." instance=ExtResource( 2 )]
+
+[node name="wait_animation" parent="." instance=ExtResource( 3 )]
+
+[node name="meow" type="Timer" parent="."]

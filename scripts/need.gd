@@ -34,6 +34,11 @@ func set_value(value: float):
 		self.value = value # change value
 
 
+# Simulates the ticks.
+func tick(delta: float):
+	pass
+
+
 # Returns the current value.
 # @return value
 func get_value() -> float:

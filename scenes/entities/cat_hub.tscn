@@ -1,0 +1,105 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://animations/makkuro.tres" type="SpriteFrames" id=1]
+[ext_resource path="res://data/activity/roam_around.tscn" type="PackedScene" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+
+# Roaming cat
+# @author Alberto Blanco Celdrán
+# @date 02/10/2021 15:00
+# Physical representation of the cat in the hub.
+
+signal reached_destination
+signal halted_movement
+signal stopped_moving
+
+enum STATUS { Idle, Sitting, Walking, Eating }
+
+onready var sprite: AnimatedSprite = $sprite
+onready var ACT_ROAM_AROUND: Node = $act_roam_around
+
+export (float) var walk_speed # how fast does the cat move
+
+var move_pos: Vector2 # where the cat will try to go
+var is_moving: bool # whether the cat is moving
+var current_activity: Node # current activity
+var status: int = STATUS.Idle
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	start_activity(ACT_ROAM_AROUND)
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# Called every physics frame. 'delta' is the elapsed time since the previous frame.
+func _physics_process(delta):
+	_handle_movement(delta)
+
+
+# Starts a new activity.
+# @param activity node
+# @param activity start arguments
+func start_activity(activity: Node, args: Array = []):
+	activity.connect('activity_ended', self, '_on_activity_ended')
+	current_activity = activity
+	activity.start(args)
+
+
+# Makes the cat move to a certain location
+# @param target location
+func go_to(target: Vector2):
+	move_pos = target
+	is_moving = true
+
+
+# Makes the cat stop on their tracks.
+func stop_moving():
+	is_moving = false
+	emit_signal('halted_movement')
+	emit_signal('stopped_moving')
+
+
+# Returns the possible statuses for the cat.
+# @return status enum
+func get_status_enum():
+	return STATUS
+
+
+# Handles cat movement.
+# @param physics delta
+func _handle_movement(delta: float):
+	if is_moving:
+		# move towards the desired location
+		transform.origin = transform.origin.move_toward(move_pos, delta * walk_speed)
+		
+		# once the location has been reached, stop moving
+		if transform.origin == move_pos:
+			is_moving = false
+			emit_signal('reached_destination')
+			emit_signal('stopped_moving')
+
+
+# Called when the current activity ends.
+func _on_activity_ended(activity: Node):
+	activity.disconnect('activity_ended', self, '_on_activity_ended')
+"
+
+[node name="cat_hub" type="Node2D"]
+script = SubResource( 1 )
+walk_speed = 5.0
+
+[node name="sprite" type="AnimatedSprite" parent="."]
+frames = ExtResource( 1 )
+animation = "idle"
+
+[node name="act_roam_around" parent="." instance=ExtResource( 2 )]
+walkable_space = Rect2( -300, -300, 600, 600 )
+max_walk_distance = 100.0
