@@ -373,7 +373,7 @@ walkable_space = Rect2( -100, -100, 200, 200 )
 [node name="sprite" type="AnimatedSprite" parent="."]
 frames = ExtResource( 1 )
 animation = "idle"
-frame = 1
+frame = 2
 playing = true
 
 [node name="meow_delay" type="Timer" parent="."]
