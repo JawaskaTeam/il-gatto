@@ -55,7 +55,7 @@ playing = true
 position = Vector2( 322.824, 157.335 )
 frames = ExtResource( 2 )
 animation = "walk"
-frame = 2
+frame = 3
 playing = true
 offset = Vector2( 25.5891, -14.3145 )
 
@@ -63,7 +63,6 @@ offset = Vector2( 25.5891, -14.3145 )
 position = Vector2( 193.052, 231.041 )
 frames = ExtResource( 2 )
 animation = "turn"
-frame = 5
 playing = true
 offset = Vector2( 25.5891, -14.3145 )
 
@@ -71,6 +70,7 @@ offset = Vector2( 25.5891, -14.3145 )
 position = Vector2( 112.003, 233.16 )
 frames = ExtResource( 2 )
 animation = "brush"
+frame = 4
 playing = true
 offset = Vector2( 25.5891, -14.3145 )
 
