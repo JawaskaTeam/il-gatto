@@ -40,6 +40,13 @@ func _on_entity_placed(entity):
 [node name="hub" type="Node2D"]
 script = SubResource( 1 )
 
+[node name="cat_roam" parent="." instance=ExtResource( 1 )]
+position = Vector2( 512, 300 )
+walk_speed = 100.0
+
+[node name="litter_box" parent="." instance=ExtResource( 4 )]
+position = Vector2( 79.6769, 526.819 )
+
 [node name="ui" type="Control" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
@@ -60,10 +67,3 @@ margin_left = 122.73
 margin_top = 140.162
 margin_right = 380.73
 margin_bottom = 385.162
-
-[node name="cat_roam" parent="." instance=ExtResource( 1 )]
-position = Vector2( 512, 300 )
-walk_speed = 100.0
-
-[node name="litter_box" parent="." instance=ExtResource( 4 )]
-position = Vector2( 79.6769, 526.819 )

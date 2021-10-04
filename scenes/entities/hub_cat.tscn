@@ -1,6 +1,7 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://animations/makkuro.tres" type="SpriteFrames" id=1]
+[ext_resource path="res://scripts/idle_action.gd" type="Script" id=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -15,11 +16,15 @@ signal stopped_moving
 
 enum ANIMATION_VARIANT { Idle, Meow, Blink, MeowBlink }
 
+const IN_CLICK: String = 'click'
+
 onready var sprite: AnimatedSprite = $sprite
 onready var meow_delay: Timer = $meow_delay
 onready var meow: AudioStreamPlayer2D = $meow
 onready var blink: Timer = $blink
 onready var click_area: Area2D = $click_area
+onready var _pet_cooldown: Timer = $pet_cooldown
+onready var boredom: Timer = $boredom
 onready var random := RandomNumberGenerator.new()
 onready var meows: Array = []
 onready var animation_variants: Dictionary = {
@@ -40,9 +45,14 @@ export (float) var walk_speed # how fast does the cat move
 export (float) var max_sit_time # longest time sitting down
 export (float) var min_sit_time # shortest time sitting down
 export (float) var max_distance # longest distance that the cat will walk
+export (float) var pet_cooldown # how long until we can pet the cat again
+export (float) var pet_mood_boost # how much mood does petting increase
+export (float) var boredom_delay # how long until the cat bores themselves
+export (float) var boredom_mood_penalty # how much mood is lost per tick when bored
 export (Rect2) var walkable_space # where can the cat walk by
 
 # movement
+var spawn_pos: Vector2 # where the cat did spawn
 var move_pos: Vector2 # where the cat will try to go
 var is_moving: bool # whether the cat is moving
 
@@ -56,9 +66,19 @@ var active_action: Node # current action waiting to be finished
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# get spawn pos
+	spawn_pos = transform.origin
+	
 	# load meowing sounds
 	for i in range(1, 12):
-		meows.push_front(load(str('res://assets/Audio/Sounds/makkuro_meow/meow', i, '.mp3')))
+		meows.push_front(load(str('res://assets/audio/sounds/makkuro_meow/meow', i, '.mp3')))
+	
+	# initialize petting cooldown
+	_pet_cooldown.set_wait_time(pet_cooldown)
+	
+	# initialize boredom timer
+	boredom.set_wait_time(boredom_delay)
+	boredom.connect('timeout', self, '_on_bored')
 	
 	# connect with entity placing
 	get_parent().connect('entity_placed', self, '_on_entity_placed')
@@ -173,21 +193,52 @@ func clear_actions():
 
 # Queues a walking action to a random location.
 func walk():
-	# get the origin
-	var pos = transform.origin
-
 	# calculate where the cat is relatively going to
 	var x = random.randi_range(-max_distance, max_distance)
 	var y = random.randi_range(-max_distance, max_distance)
 
 	# calculate new position
-	var new_pos = pos + Vector2(clamp(x, walkable_space.position.x, walkable_space.end.x), clamp(y, walkable_space.position.y, walkable_space.end.y))
+	var new_pos = spawn_pos + Vector2(clamp(x, walkable_space.position.x, walkable_space.end.x), clamp(y, walkable_space.position.y, walkable_space.end.y))
 	add_action(action_walk, [new_pos])
 
 
 # Queues a sitting action.
 func sit():
 	add_action(action_idle, [random.randi_range(min_sit_time, max_sit_time)])
+
+
+# Improves the cat mood and applies a cooldown.
+func pet():
+	GameState.mood.set_value(GameState.mood.get_value() + pet_mood_boost)
+	_pet_cooldown.start()
+	# TODO: show visual cue
+
+
+# Catches mouse input to proceed.
+func _input(event: InputEvent):
+	if event is InputEventMouseButton and event.is_action_pressed(IN_CLICK) and GameState.can_click:
+		var cat = get_parent().cat
+		var size: Vector2 = cat.click_area.get_node('shape').shape.get_extents()
+		var rect := Rect2(cat.click_area.position - size * .5, size)
+		if rect.has_point(cat.to_local(event.position)):
+			_on_click()
+
+
+# Called when the cat is touched.
+func _on_click():
+	if active_action and active_action.has_method('cancel'):
+		if active_action.cancel():
+			_pet_cooldown.start()
+	else:
+		if _pet_cooldown.is_stopped():
+			GameState.mood.set_value(GameState.mood.get_value() - pet_mood_boost)
+			GameState.mood.remove_modifier('bored')
+			_pet_cooldown.start()
+
+
+# Called when the cat gets bored.
+func _on_bored():
+	GameState.mood.add_modifier('bored', boredom_mood_penalty)
 
 
 # Chooses the next action that the cat should perform.
@@ -302,42 +353,6 @@ func end():
 	.end()
 "
 
-[sub_resource type="GDScript" id=4]
-script/source = "extends 'res://scripts/action.gd'
-
-
-# Idle action
-# @author Alberto Blanco Celdrán
-# @date 04/10/2021 00:02
-# Waits a certain amount of time before proceeding.
-
-onready var timer: Timer = $timer
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	timer.connect('timeout', self, 'end')
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
-
-# @override
-func start(args: Array = []):
-	if args.size() <= 0:
-		push_error('No position specified.')
-	timer.start(args[0])
-	.start(args)
-
-
-# @override
-func end():
-	timer.stop()
-	.end()
-"
-
 [sub_resource type="GDScript" id=5]
 script/source = "extends 'res://scripts/action.gd'
 
@@ -383,6 +398,10 @@ walk_speed = 5.0
 max_sit_time = 2.0
 min_sit_time = 1.0
 max_distance = 300.0
+pet_cooldown = 30.0
+pet_mood_boost = 15.0
+boredom_delay = 60.0
+boredom_mood_penalty = 0.2
 walkable_space = Rect2( -100, -100, 200, 200 )
 
 [node name="click_area" type="Area2D" parent="."]
@@ -393,12 +412,16 @@ shape = SubResource( 2 )
 [node name="sprite" type="AnimatedSprite" parent="."]
 frames = ExtResource( 1 )
 animation = "idle"
-frame = 3
 playing = true
 
 [node name="meow_delay" type="Timer" parent="."]
 
 [node name="blink" type="Timer" parent="."]
+
+[node name="pet_cooldown" type="Timer" parent="."]
+one_shot = true
+
+[node name="boredom" type="Timer" parent="."]
 
 [node name="meow" type="AudioStreamPlayer2D" parent="."]
 
@@ -406,10 +429,12 @@ playing = true
 script = SubResource( 3 )
 
 [node name="idle" type="Node" parent="."]
-script = SubResource( 4 )
+script = ExtResource( 2 )
 
 [node name="timer" type="Timer" parent="idle"]
 one_shot = true
 
 [node name="wait_anim" type="Node" parent="."]
 script = SubResource( 5 )
+
+[node name="eat" type="Node" parent="."]

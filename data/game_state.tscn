@@ -15,6 +15,7 @@ signal tick
 
 onready var tick: Timer = $tick
 onready var payday: Timer = $payday
+onready var boredom: Timer = $boredom
 onready var date: Node = $date
 onready var health: Node = $health
 onready var hunger: Node = $hunger
@@ -25,6 +26,8 @@ onready var inventory: Node = $inventory
 onready var money: Node = $money
 
 export (float) var tick_rate = 1
+
+var can_click: bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
