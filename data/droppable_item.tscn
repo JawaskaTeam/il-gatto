@@ -27,11 +27,13 @@ func use(hub: Node2D):
 	var instance = placed_entity.instance()
 	instance.item = name
 	hub.add_child(instance)
+	GameState.can_click = false
 
 
 # Called by the interface to finally consume the item.
 func place():
 	GameState.inventory.add_item(name, -1) # consume one item by default
+	GameState.can_click = true
 "
 
 [node name="droppable" type="Node"]

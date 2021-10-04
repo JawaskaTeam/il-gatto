@@ -24,9 +24,11 @@ func use(hub: Node2D):
 	var instance: Control = interface.instance()
 	instance.item = name
 	hub.add_child(instance)
+	GameState.can_click = false
 
 
 # Called by the interface to finally consume the item.
 # @param the clicked cat
 func consume(cat: Node2D):
 	GameState.inventory.add_item(name, -1) # consume one item by default
+	GameState.can_click = true

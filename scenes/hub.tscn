@@ -39,6 +39,12 @@ func _on_entity_placed(entity):
 script = SubResource( 1 )
 
 [node name="cat_roam" parent="." instance=ExtResource( 1 )]
+position = Vector2( 512, 300 )
+walk_speed = 100.0
+
+[node name="litter_box" parent="." instance=ExtResource( 4 )]
+position = Vector2( 79.6769, 526.819 )
+
 position = Vector2( 156.422, 165.071 )
 walk_speed = 100.0
 
@@ -50,6 +56,18 @@ __meta__ = {
 }
 
 [node name="inventory" parent="ui" instance=ExtResource( 2 )]
+margin_left = 642.172
+margin_top = 145.083
+margin_right = 857.172
+margin_bottom = 380.083
+
+[node name="shop" parent="ui" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 122.73
+margin_top = 140.162
+margin_right = 380.73
+margin_bottom = 385.162
 margin_left = 286.594
 margin_top = 10.1539
 margin_right = 501.594
