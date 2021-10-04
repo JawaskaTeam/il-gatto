@@ -1,0 +1,57 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+
+# Shop
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 17:55
+# Defines the available items for sale.
+
+onready var buy: Node = $buy
+onready var sell: Node = $buy
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# Returns all items for sale.
+# @return all items for sale
+func items_for_sale():
+	return buy.get_children()
+
+
+# Returns an item for sale.
+# @param item
+# @return data
+func get_buy_item(item: String):
+	return buy.get_node(item)
+
+
+# Returns all items that can be sold.
+# @return all items for buy
+func items_for_buy():
+	return sell.get_children()
+
+
+# Returns an item for buy.
+# @param item
+# @return data
+func get_sell_item(item: String):
+	return sell.get_node(item)
+"
+
+[node name="shop" type="Node"]
+script = SubResource( 1 )
+
+[node name="buy" type="Node" parent="."]
+
+[node name="sell" type="Node" parent="."]
