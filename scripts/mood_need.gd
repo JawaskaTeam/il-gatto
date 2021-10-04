@@ -24,9 +24,10 @@ func _ready():
 
 # @override
 func _on_value_changed(_old: float, value: float):
+	var mood = get_parent().get_node('mood')
 	if value <= low_threshold:
-		GameState.mood.add_modifier(name, -mood_penalty)
+		mood.add_modifier(name, -mood_penalty)
 	elif value >= high_threshold:
-		GameState.mood.add_modifier(name, mood_recovery)
+		mood.add_modifier(name, mood_recovery)
 	else:
-		GameState.mood.remove_modifier(name)
+		mood.remove_modifier(name)

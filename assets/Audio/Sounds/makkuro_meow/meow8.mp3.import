@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/meow8.mp3-8a1ded0777ce38a3c01fe09163ad6953.mp3str"
+
+[deps]
+
+source_file="res://assets/Audio/Sounds/makkuro_meow/meow8.mp3"
+dest_files=[ "res://.import/meow8.mp3-8a1ded0777ce38a3c01fe09163ad6953.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0
