@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+
+# Items
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 1:08
+# Available items list
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# Returns an item's infromation
+# @param item ID
+# @return item's information
+func get(item: String) -> Node:
+	return get_node(item)
+"
+
+[node name="items" type="Node"]
+script = SubResource( 1 )
