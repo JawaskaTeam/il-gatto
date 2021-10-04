@@ -31,7 +31,7 @@ func _ready():
 # Called when the amount of uses remaining change.
 func _on_uses_changed(uses: int):
 	var max_uses = Items.get(item).uses
-	bar.set_width(40 * (uses/max_uses))
+	bar.set_size(Vector2(40 * (float(uses)/float(max_uses)), bar.rect_size.y))
 "
 
 [node name="multiuse_stack" instance=ExtResource( 1 )]

@@ -11,7 +11,8 @@ __meta__ = {
 }
 
 [node name="click" type="Button" parent="."]
-margin_right = 64.0
+margin_left = 0.561234
+margin_right = 64.5612
 margin_bottom = 64.0
 flat = true
 __meta__ = {
@@ -19,6 +20,7 @@ __meta__ = {
 }
 
 [node name="icon" type="Sprite" parent="."]
+offset = Vector2( 32, 32 )
 
 [node name="amount" type="Label" parent="."]
 margin_left = 24.0

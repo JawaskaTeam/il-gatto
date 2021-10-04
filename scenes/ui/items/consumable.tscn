@@ -28,7 +28,9 @@ func _ready():
 func _input(event: InputEvent):
 	if event is InputEventMouseButton and event.is_action_pressed(IN_CLICK):
 		var cat = get_parent().cat
-		if cat.sprite.get_rect().has_point(cat.to_local(event.position)):
+		var size: Vector2 = cat.click_area.get_node('shape').shape.get_extents()
+		var rect := Rect2(cat.click_area.position - size * .5, size)
+		if rect.has_point(cat.to_local(event.position)):
 			Items.get(item).consume(cat)
 		queue_free() # remove interface afterwards, no matter the result
 		
@@ -43,8 +45,8 @@ __meta__ = {
 }
 
 [node name="hint" type="Label" parent="."]
-anchor_right = 1.0
 margin_top = 66.0
+margin_right = 1024.0
 margin_bottom = 80.0
 text = "What do you want to use this with?"
 align = 1
@@ -63,3 +65,4 @@ __meta__ = {
 }
 
 [node name="sprite" type="Sprite" parent="frame"]
+offset = Vector2( 64, 64 )

@@ -17,7 +17,7 @@ onready var cat: Node2D = $cat_roam
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	GameState.inventory.add_item('test', 5)
+	GameState.inventory.add_item('test2', 5)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
