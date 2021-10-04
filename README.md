@@ -1,10 +1,12 @@
-# Il Gatto
+# ![Makkuro's face](icon.png) Il Gatto
 
 A game for the [Open Game Jam 2021 at itch.io][jam]
 
 ## Notes
 
-Hey! I am Makkuro (真っ黒)![Makkuro's face](icon.png) and your mission is to pet me!
+Hey! I am Makkuro (真っ黒) and your mission is to pet me!
+
+![Makkuro staring at you][makkurochi]
 
 ## References
 
@@ -33,4 +35,4 @@ Tools used
 [sigma]: https://github.com/sigmasoldi3r
 [dacal]: https://github.com/ericdacal
 [dyametr]: https://github.com/DyaMetR
-
+[makkurochi]: assets/makkuro_comercial_anim_transparent.gif
