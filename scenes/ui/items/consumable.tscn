@@ -1,0 +1,65 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+
+# Consumable item interface
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 2:05
+# Allows the user to use a consumable item
+
+const IN_CLICK: String = 'click'
+
+var item: String # item being used
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	$frame/sprite.set_texture(Items.get(item).icon)
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# Catches mouse input to proceed.
+func _input(event: InputEvent):
+	if event is InputEventMouseButton and event.is_action_pressed(IN_CLICK):
+		var cat = get_parent().cat
+		if cat.sprite.get_rect().has_point(cat.to_local(event.position)):
+			Items.get(item).consume(cat)
+		queue_free() # remove interface afterwards, no matter the result
+		
+"
+
+[node name="consumable" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="hint" type="Label" parent="."]
+anchor_right = 1.0
+margin_top = 66.0
+margin_bottom = 80.0
+text = "What do you want to use this with?"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="frame" type="ColorRect" parent="."]
+margin_left = 865.0
+margin_top = 442.0
+margin_right = 993.0
+margin_bottom = 570.0
+color = Color( 0, 0, 0, 0.392157 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="sprite" type="Sprite" parent="frame"]
