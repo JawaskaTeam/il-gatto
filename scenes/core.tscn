@@ -26,7 +26,7 @@ texture = ExtResource( 3 )
 position = Vector2( 107.053, 66.1117 )
 frames = ExtResource( 2 )
 animation = "idle"
-frame = 3
+frame = 1
 playing = true
 
 [node name="jodete" type="AnimatedSprite" parent="."]
@@ -58,7 +58,7 @@ playing = true
 position = Vector2( 322.824, 157.335 )
 frames = ExtResource( 2 )
 animation = "turn"
-frame = 7
+frame = 1
 playing = true
 offset = Vector2( 25.5891, -14.3145 )
 
