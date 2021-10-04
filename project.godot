@@ -34,6 +34,7 @@ config/icon="res://icon.png"
 
 Items="*res://data/items.tscn"
 GameState="*res://data/game_state.tscn"
+Shop="*res://data/shop.tscn"
 
 [display]
 
