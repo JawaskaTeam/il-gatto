@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scenes/entities/hub_cat.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/ui/inventory/inventory.tscn" type="PackedScene" id=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -13,19 +14,43 @@ script/source = "extends Node2D
 
 onready var cat: Node2D = $cat_roam
 
+signal entity_placed
+
+# placed entities
+var entities: Array = []
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	GameState.inventory.add_item('droppable', 5)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+
+# Called when an entity is placed by the player.
+func _on_entity_placed(entity):
+	emit_signal('entity_placed', entity)
 "
 
 [node name="hub" type="Node2D"]
 script = SubResource( 1 )
 
 [node name="cat_roam" parent="." instance=ExtResource( 1 )]
+position = Vector2( 512, 300 )
 walk_speed = 100.0
+
+[node name="ui" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="inventory" parent="ui" instance=ExtResource( 2 )]
+margin_left = 642.172
+margin_top = 145.083
+margin_right = 857.172
+margin_bottom = 380.083

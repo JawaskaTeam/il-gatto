@@ -1,0 +1,87 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Panel
+
+
+# Inventory
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 12:06
+# Displays the items the player currently has.
+
+onready var grid: GridContainer = $grid
+onready var hub: Node2D = get_parent().get_parent()
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	GameState.inventory.connect('item_added', self, '_on_item_added')
+	GameState.inventory.connect('items_cleared', self, '_on_items_cleared')
+	grid.columns = grid.get_size().x / 64
+	fill()
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# Adds an item stack representation.
+# @param item
+func add_item_stack(item: String):
+	var stack = GameState.inventory.get_item_stack(item)
+	var instance = stack.ui_slot.instance()
+	instance.item = item
+	grid.add_child(instance)
+	instance.connect('item_used', self, '_on_item_used')
+
+
+# Goes through all items and adds them to the list.
+func fill():
+	for stack in GameState.inventory.get_children():
+		add_item_stack(stack)
+
+
+# Called when an item is used
+func _on_item_used(item: String):
+	Items.get(item).use(hub)
+	queue_free() # close the inventory upon using
+
+
+# Called when an item is opened with the inventory open.
+func _on_item_added(item: String):
+	if not has_node(item):
+		add_item_stack(item)
+
+
+# Called when an item is opened with the inventory open.
+func _on_items_cleared():
+	for child in get_children():
+		child.queue_free()
+"
+
+[node name="inventory" type="Panel"]
+margin_right = 1024.0
+margin_bottom = 600.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="title" type="Label" parent="."]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 40.0
+margin_bottom = 14.0
+text = "Inventory"
+
+[node name="grid" type="GridContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 28.0
+margin_right = -5.0
+margin_bottom = -5.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://animations/makkuro.tres" type="SpriteFrames" id=1]
 
@@ -19,6 +19,7 @@ onready var sprite: AnimatedSprite = $sprite
 onready var meow_delay: Timer = $meow_delay
 onready var meow: AudioStreamPlayer2D = $meow
 onready var blink: Timer = $blink
+onready var click_area: Area2D = $click_area
 onready var random := RandomNumberGenerator.new()
 onready var meows: Array = []
 onready var animation_variants: Dictionary = {
@@ -55,6 +56,9 @@ func _ready():
 	# load meowing sounds
 	for i in range(1, 12):
 		meows.push_front(load(str('res://assets/Audio/Sounds/makkuro_meow/meow', i, '.mp3')))
+	
+	# connect with entity placing
+	get_parent().connect('entity_placed', self, '_on_entity_placed')
 	
 	# initialize meow delay
 	meow_delay.connect('timeout', self, '_on_meow')
@@ -174,7 +178,7 @@ func walk():
 	var y = random.randi_range(-max_distance, max_distance)
 
 	# calculate new position
-	var new_pos = Vector2(clamp(pos.x + x, walkable_space.position.x, walkable_space.end.x), clamp(pos.y + y, walkable_space.position.y, walkable_space.end.y))
+	var new_pos = pos + Vector2(clamp(x, walkable_space.position.x, walkable_space.end.x), clamp(y, walkable_space.position.y, walkable_space.end.y))
 	add_action(action_walk, [new_pos])
 
 
@@ -218,7 +222,7 @@ func _on_meow():
 	
 	# play animation
 	play_animation_variant(sprite.animation, variant) # play animation variant
-	meow.set_stream(meows[random.randi_range(1, 12)]) # select sound to play
+	meow.set_stream(meows[random.randi_range(0, meows.size() - 1)]) # select sound to play
 	meow.play() # play selected sound
 
 
@@ -250,9 +254,17 @@ func _on_action_ended(action: Node):
 	action.disconnect('action_ended', self, '_on_action_ended')
 	active_action = null
 	next_action()
+
+
+# Called when an entity is placed by the player.
+func _on_entity_placed(entity):
+	pass
 "
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 64, 32 )
+
+[sub_resource type="GDScript" id=3]
 script/source = "extends 'res://scripts/action.gd'
 
 
@@ -287,7 +299,7 @@ func end():
 	.end()
 "
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=4]
 script/source = "extends 'res://scripts/action.gd'
 
 
@@ -323,7 +335,7 @@ func end():
 	.end()
 "
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=5]
 script/source = "extends 'res://scripts/action.gd'
 
 
@@ -370,6 +382,11 @@ min_sit_time = 1.0
 max_distance = 300.0
 walkable_space = Rect2( -100, -100, 200, 200 )
 
+[node name="click_area" type="Area2D" parent="."]
+
+[node name="shape" type="CollisionShape2D" parent="click_area"]
+shape = SubResource( 2 )
+
 [node name="sprite" type="AnimatedSprite" parent="."]
 frames = ExtResource( 1 )
 animation = "idle"
@@ -383,13 +400,13 @@ playing = true
 [node name="meow" type="AudioStreamPlayer2D" parent="."]
 
 [node name="walk" type="Node" parent="."]
-script = SubResource( 2 )
+script = SubResource( 3 )
 
 [node name="idle" type="Node" parent="."]
-script = SubResource( 3 )
+script = SubResource( 4 )
 
 [node name="timer" type="Timer" parent="idle"]
 one_shot = true
 
 [node name="wait_anim" type="Node" parent="."]
-script = SubResource( 4 )
+script = SubResource( 5 )
