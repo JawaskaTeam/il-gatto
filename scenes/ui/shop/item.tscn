@@ -1,0 +1,31 @@
+[gd_scene format=2]
+
+[node name="item" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -960.0
+margin_bottom = -536.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="click" type="Button" parent="."]
+margin_right = 64.0
+margin_bottom = 64.0
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon" type="Sprite" parent="."]
+offset = Vector2( 32, 32 )
+
+[node name="price" type="Label" parent="."]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 45.0
+margin_bottom = 19.0
+text = "0$"
+__meta__ = {
+"_edit_use_anchors_": false
+}

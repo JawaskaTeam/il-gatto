@@ -267,6 +267,8 @@ func _ready():
 # Returns an item stack
 # @return item stack
 func get_item_stack(item: String) -> Node:
+	if not has_node(item):
+		return null
 	return get_node(item)
 
 
@@ -283,7 +285,7 @@ func add_item(item: String, amount: int):
 			get_node(item).add_amount(amount)
 	else:
 		var node = get_node(item)
-		if node.amount - amount <= 0:
+		if node.amount + amount <= 0:
 			emit_signal('item_removed', item)
 		node.add_amount(amount)
 

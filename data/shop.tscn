@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://data/shop_item.tscn" type="PackedScene" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -10,7 +12,7 @@ script/source = "extends Node
 # Defines the available items for sale.
 
 onready var buy: Node = $buy
-onready var sell: Node = $buy
+onready var sell: Node = $sell
 
 
 # Called when the node enters the scene tree for the first time.
@@ -47,6 +49,27 @@ func items_for_buy():
 # @return data
 func get_sell_item(item: String):
 	return sell.get_node(item)
+
+
+# Buys an item (if affordable)
+# @param item
+func buy(item: String):
+	var _item = get_buy_item(item)
+	if GameState.money.can_afford(_item.price):
+		GameState.money.add_balance(-_item.price)
+		GameState.inventory.add_item(item, 1)
+		# TODO: play buy sound
+
+
+# Sells the given item.
+# @param item
+func sell(item: String):
+	var _item = get_sell_item(item)
+	var stack = GameState.inventory.get_item_stack(item)
+	if stack and stack.amount > 0:
+		GameState.inventory.add_item(item, -1)
+		GameState.money.add_balance(_item.price)
+		# TODO: play sell sound
 "
 
 [node name="shop" type="Node"]
@@ -54,4 +77,13 @@ script = SubResource( 1 )
 
 [node name="buy" type="Node" parent="."]
 
+[node name="test" parent="buy" instance=ExtResource( 1 )]
+price = 25.0
+
+[node name="multiuse" parent="buy" instance=ExtResource( 1 )]
+price = 50.0
+
 [node name="sell" type="Node" parent="."]
+
+[node name="droppable" parent="sell" instance=ExtResource( 1 )]
+price = 100.0

@@ -9,7 +9,6 @@ script/source = "extends Node
 # @date 04/10/2021 17:48
 # Describes the buying and selling prices of an item-
 
-export (String) var item
 export (float) var price
 
 

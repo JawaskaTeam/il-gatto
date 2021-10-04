@@ -1,0 +1,51 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/ui/shop/item.tscn" type="PackedScene" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends 'res://scripts/shop_item.gd'
+
+
+# Buy item
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 18:36
+# Allows an item to be bought.
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	GameState.money.connect('changed', self, '_on_balance_changed')
+	_on_balance_changed()
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# @override
+func _on_click():
+	Shop.buy(item.name)
+
+
+# Called when money value changes.
+func _on_balance_changed():
+	var can_afford = GameState.money.can_afford(Shop.get_buy_item(item.name).price)
+	if can_afford:
+		icon.modulate.r = 1
+		icon.modulate.g = 1
+		icon.modulate.b = 1
+	else:
+		icon.modulate.r = 0
+		icon.modulate.g = 0
+		icon.modulate.b = 0
+"
+
+[node name="buy" instance=ExtResource( 1 )]
+script = SubResource( 1 )
+
+[node name="price" parent="." index="2"]
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 40.0
+margin_bottom = 14.0

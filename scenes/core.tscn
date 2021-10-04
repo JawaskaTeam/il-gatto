@@ -11,7 +11,7 @@
 position = Vector2( 107.053, 66.1117 )
 frames = ExtResource( 2 )
 animation = "idle"
-frame = 1
+frame = 2
 playing = true
 
 [node name="jodete" type="AnimatedSprite" parent="."]
@@ -39,5 +39,5 @@ playing = true
 position = Vector2( 344.003, 141.131 )
 frames = ExtResource( 2 )
 animation = "turn"
-frame = 1
+frame = 6
 playing = true
