@@ -28,7 +28,9 @@ func _process(delta):
 func _input(event: InputEvent):
 	if event is InputEventMouseButton and ghosted:
 		if event.is_action_pressed(IN_CLICK):
-			place()
+			var rect := Rect2(0, 156, 512, 100) # where can items be placed at
+			if rect.has_point(event.position):
+				place()
 		elif event.is_action_pressed(IN_CANCEL):
 			queue_free() # remove itself
 

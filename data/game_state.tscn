@@ -374,6 +374,9 @@ autostart = true
 
 [node name="boredom" type="Timer" parent="."]
 
+[node name="litter" type="Timer" parent="."]
+wait_time = 120.0
+
 [node name="date" type="Node" parent="."]
 script = SubResource( 2 )
 

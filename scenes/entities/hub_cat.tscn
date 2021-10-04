@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://animations/makkuro.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://scripts/idle_action.gd" type="Script" id=2]
@@ -386,6 +386,82 @@ func end():
 	.end()
 "
 
+[sub_resource type="GDScript" id=5]
+script/source = "extends 'res://scripts/cancel_action.gd'
+
+
+# Eating action
+# @author Alberto Blanco Celdrán
+# @date 05/10/2021 0:26
+# Makes the cat eat.
+
+export (float) var hunger_restored
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# @override
+func end():
+	GameState.hunger.set_value(GameState.hunger.get_value() + hunger_restored)
+	.end()
+"
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends 'res://scripts/cancel_action.gd'
+
+
+# Drink action
+# @author Alberto Blanco Celdrán
+# @date 05/10/2021 0:33
+# Makes the cat drink.
+
+export (float) var thirst_restored
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# @override
+func end():
+	GameState.thirst.set_value(GameState.thirst.get_value() + thirst_restored)
+	.end()
+"
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends 'res://scripts/cancel_action.gd'
+
+
+# Littering
+# @author Alberto Blanco Celdrán
+# @date 05/10/2021 0:44
+# Makes the cat use the litter box.
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
 [node name="cat" type="Node2D"]
 script = SubResource( 1 )
 max_meow_delay = 20.0
@@ -410,7 +486,7 @@ shape = SubResource( 2 )
 [node name="sprite" type="AnimatedSprite" parent="."]
 frames = ExtResource( 1 )
 animation = "idle"
-frame = 3
+frame = 2
 playing = true
 
 [node name="meow_delay" type="Timer" parent="."]
@@ -437,6 +513,29 @@ one_shot = true
 script = SubResource( 4 )
 
 [node name="eat" type="Node" parent="."]
+script = SubResource( 5 )
+mood_penalty = 10.0
+hunger_restored = 66.0
+
+[node name="timer" type="Timer" parent="eat"]
+wait_time = 5.0
+one_shot = true
+
+[node name="drink" type="Node" parent="."]
+script = SubResource( 6 )
+mood_penalty = 15.0
+
+[node name="timer" type="Timer" parent="drink"]
+wait_time = 5.0
+one_shot = true
+
+[node name="litter" type="Node" parent="."]
+script = SubResource( 7 )
+mood_penalty = 30.0
+
+[node name="timer" type="Timer" parent="litter"]
+wait_time = 6.0
+one_shot = true
 
 [node name="shadow" type="Sprite" parent="."]
 position = Vector2( -25.4829, 24.9643 )
