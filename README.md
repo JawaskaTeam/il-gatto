@@ -17,10 +17,17 @@ Here is a quick list of tools and resources used during this game jam, as stated
 >    Games source must be available and licensed as open 
 >    source, and include a LICENCE file. 
 
-Tools used
+### Tools
 
  + Godot Engine [at github.com][godot]
  + Aseprite Editor [at github.com][aseprite]
+
+### Music
+
+Music from http://beta.ccmixter.org/
+
+ + On Cherry Hill by Javolenus (c) copyright 2021 Licensed under a Creative Commons license. http://dig.ccmixter.org/files/Javolenus/64202
+ + precarity by airtone (c) copyright 2021 Licensed under a Creative Commons Attribution Noncommercial  (3.0) license. http://dig.ccmixter.org/files/airtone/64030 
 
 ## Authors
 
