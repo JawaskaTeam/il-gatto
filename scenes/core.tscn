@@ -52,10 +52,10 @@ frame = 3
 playing = true
 
 [node name="la prox t enteras ajiaj" type="AnimatedSprite" parent="."]
-position = Vector2( 322.824, 157.335 )
+position = Vector2( 328.959, 195.09 )
 frames = ExtResource( 2 )
 animation = "walk"
-frame = 3
+frame = 1
 playing = true
 offset = Vector2( 25.5891, -14.3145 )
 
@@ -70,12 +70,12 @@ offset = Vector2( 25.5891, -14.3145 )
 position = Vector2( 112.003, 233.16 )
 frames = ExtResource( 2 )
 animation = "brush"
-frame = 4
+frame = 2
 playing = true
 offset = Vector2( 25.5891, -14.3145 )
 
 [node name="item_water_bowl" type="Sprite" parent="."]
-position = Vector2( 323, 99 )
+position = Vector2( 329.135, 136.755 )
 texture = ExtResource( 4 )
 
 [node name="food_bowl" type="Sprite" parent="."]
@@ -87,23 +87,23 @@ position = Vector2( 215.287, 167.981 )
 texture = ExtResource( 6 )
 
 [node name="icon_hydration" type="Sprite" parent="."]
-position = Vector2( 357.199, 53.6437 )
+position = Vector2( 363.334, 91.3987 )
 texture = ExtResource( 7 )
 
 [node name="icon_health" type="Sprite" parent="."]
-position = Vector2( 381.697, 53.5033 )
+position = Vector2( 387.832, 91.2583 )
 texture = ExtResource( 8 )
 
 [node name="icon_hunger" type="Sprite" parent="."]
-position = Vector2( 404.723, 52.8359 )
+position = Vector2( 410.858, 90.5909 )
 texture = ExtResource( 9 )
 
 [node name="icon_hygene" type="Sprite" parent="."]
-position = Vector2( 428.083, 52.8359 )
+position = Vector2( 434.218, 90.5909 )
 texture = ExtResource( 10 )
 
 [node name="icon_mood" type="Sprite" parent="."]
-position = Vector2( 449.106, 52.8359 )
+position = Vector2( 455.241, 90.5909 )
 texture = ExtResource( 11 )
 
 [node name="caca_box" type="Sprite" parent="."]
@@ -111,7 +111,7 @@ position = Vector2( 48.9466, 227.972 )
 texture = ExtResource( 14 )
 
 [node name="item_food_bowl" type="Sprite" parent="."]
-position = Vector2( 318.506, 55.3075 )
+position = Vector2( 324.641, 93.0625 )
 texture = ExtResource( 3 )
 
 [node name="hearts" type="Sprite" parent="."]

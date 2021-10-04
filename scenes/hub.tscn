@@ -2,6 +2,7 @@
 
 [ext_resource path="res://scenes/entities/hub_cat.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/ui/inventory/inventory.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/ui/shop/shop.tscn" type="PackedScene" id=3]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -40,12 +41,6 @@ script = SubResource( 1 )
 
 [node name="cat_roam" parent="." instance=ExtResource( 1 )]
 position = Vector2( 512, 300 )
-walk_speed = 100.0
-
-[node name="litter_box" parent="." instance=ExtResource( 4 )]
-position = Vector2( 79.6769, 526.819 )
-
-position = Vector2( 156.422, 165.071 )
 walk_speed = 100.0
 
 [node name="ui" type="Control" parent="."]
