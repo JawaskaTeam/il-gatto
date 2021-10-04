@@ -351,7 +351,7 @@ func end():
 	.end()
 "
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=4]
 script/source = "extends 'res://scripts/action.gd'
 
 
@@ -400,7 +400,7 @@ pet_cooldown = 30.0
 pet_mood_boost = 15.0
 boredom_delay = 60.0
 boredom_mood_penalty = 0.2
-walkable_space = Rect2( -100, -100, 200, 200 )
+walkable_space = Rect2( 190, -32, 410, 50 )
 
 [node name="click_area" type="Area2D" parent="."]
 
@@ -410,6 +410,7 @@ shape = SubResource( 2 )
 [node name="sprite" type="AnimatedSprite" parent="."]
 frames = ExtResource( 1 )
 animation = "idle"
+frame = 3
 playing = true
 
 [node name="meow_delay" type="Timer" parent="."]
@@ -433,7 +434,7 @@ script = ExtResource( 2 )
 one_shot = true
 
 [node name="wait_anim" type="Node" parent="."]
-script = SubResource( 5 )
+script = SubResource( 4 )
 
 [node name="eat" type="Node" parent="."]
 
