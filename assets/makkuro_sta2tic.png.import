@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/makkuro_walking.png-48b671d8aa45665478dbc81a31ad43bb.stex"
+path="res://.import/makkuro_sta2tic.png-33021132aef91d4d94d097622d0afd68.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/makkuro_walking.png"
-dest_files=[ "res://.import/makkuro_walking.png-48b671d8aa45665478dbc81a31ad43bb.stex" ]
+source_file="res://assets/makkuro_sta2tic.png"
+dest_files=[ "res://.import/makkuro_sta2tic.png-33021132aef91d4d94d097622d0afd68.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=false
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2

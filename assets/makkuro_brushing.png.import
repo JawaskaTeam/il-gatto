@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/makkuro_walking.png-48b671d8aa45665478dbc81a31ad43bb.stex"
+path="res://.import/makkuro_brushing.png-07a8b88ed673263ede33781fc4332b27.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/makkuro_walking.png"
-dest_files=[ "res://.import/makkuro_walking.png-48b671d8aa45665478dbc81a31ad43bb.stex" ]
+source_file="res://assets/makkuro_brushing.png"
+dest_files=[ "res://.import/makkuro_brushing.png-07a8b88ed673263ede33781fc4332b27.stex" ]
 
 [params]
 

@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://animations/makkuro.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://scripts/idle_action.gd" type="Script" id=2]
+[ext_resource path="res://assets/shadow.png" type="Texture" id=3]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -30,12 +31,9 @@ onready var meows: Array = []
 onready var animation_variants: Dictionary = {
 	'idle': AnimationVariant.new('blink', 'meow', 'blink_meow')
 }
-
 onready var action_walk: Node = $walk
 onready var action_idle: Node = $idle
 onready var action_wait: Node = $wait_anim
-
-onready var litter_box: Node2D = get_parent().get_node('litter_box')
 
 export (float) var max_meow_delay # longest time without meowing
 export (float) var min_meow_delay # shortest time without meowing
@@ -438,3 +436,8 @@ one_shot = true
 script = SubResource( 5 )
 
 [node name="eat" type="Node" parent="."]
+
+[node name="shadow" type="Sprite" parent="."]
+position = Vector2( -25.4829, 24.9643 )
+z_index = -1
+texture = ExtResource( 3 )
