@@ -175,7 +175,7 @@ func walk():
 	var y = random.randi_range(-max_distance, max_distance)
 
 	# calculate new position
-	var new_pos = Vector2(clamp(pos.x + x, walkable_space.position.x, walkable_space.end.x), clamp(pos.y + y, walkable_space.position.y, walkable_space.end.y))
+	var new_pos = pos + Vector2(clamp(x, walkable_space.position.x, walkable_space.end.x), clamp(y, walkable_space.position.y, walkable_space.end.y))
 	add_action(action_walk, [new_pos])
 
 
@@ -219,7 +219,7 @@ func _on_meow():
 	
 	# play animation
 	play_animation_variant(sprite.animation, variant) # play animation variant
-	meow.set_stream(meows[random.randi_range(1, 12)]) # select sound to play
+	meow.set_stream(meows[random.randi_range(0, meows.size() - 1)]) # select sound to play
 	meow.play() # play selected sound
 
 
@@ -382,7 +382,7 @@ shape = SubResource( 5 )
 [node name="sprite" type="AnimatedSprite" parent="."]
 frames = ExtResource( 1 )
 animation = "idle"
-frame = 2
+frame = 3
 playing = true
 
 [node name="meow_delay" type="Timer" parent="."]
