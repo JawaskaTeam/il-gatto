@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends 'res://scripts/consumable_item.gd'
+
+
+# Multi-use item
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 2:51
+# An item that can be used multiple times
+
+export (int) var uses
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	stack = load('res://scenes/data/multiuse_stack.tscn')
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[node name="multiuse_item" type="Node"]
+script = SubResource( 1 )

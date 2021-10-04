@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends 'res://scripts/item_stack.gd'
+
+
+# Multi-use stack
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 2:46
+# An item stack that can be used multiple times.
+
+var uses: int
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	uses = Items.get(name).uses # default uses to the ones declared at the item
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[node name="multiuse_stack" type="Node"]
+script = SubResource( 1 )
