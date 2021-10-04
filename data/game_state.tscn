@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scripts/vital_need.gd" type="Script" id=1]
 
@@ -20,6 +20,7 @@ onready var hunger: Node = $hunger
 onready var thirst: Node = $thirst
 onready var hygene: Node = $hygene
 onready var mood: Node = $mood
+onready var inventory: Node = $inventory
 
 export (float) var tick_rate = 1
 
@@ -238,6 +239,64 @@ func tick(delta: float):
 	set_value(get_value() + (value * delta))
 "
 
+[sub_resource type="GDScript" id=6]
+script/source = "extends Node
+
+
+# Inventory
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 1:03
+# Stores the player's items.
+
+signal item_added
+signal item_removed
+signal items_cleared
+
+onready var stack: PackedScene = load('res://data/item_stack.tscn')
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# Adds a new item stack (or adds to its amount)
+func add_item(item: String, amount: int):
+	if amount > 0:
+		if not has_node(item):
+			var instance = stack.instance()
+			instance.set_name(item)
+			instance.amount = amount
+			add_child(instance)
+			emit_signal('item_added', item)
+		else:
+			get_node(item).add_amount(amount)
+	else:
+		var node = get_node(item)
+		if node.amount - amount <= 0:
+			emit_signal('item_removed', item)
+		node.add_amount(amount)
+
+
+# Clear an item stack.
+func clear_item(item: String):
+	if has_node(item):
+		get_node(item).remove()
+		emit_signal('item_removed', item)
+
+
+# Clears all items.
+func clear():
+	for child in get_children():
+		child.queue_free()
+	emit_signal('items_cleared')
+"
+
 [node name="game_state" type="Node"]
 script = SubResource( 1 )
 
@@ -293,3 +352,6 @@ decrease_rate = 1.0
 script = SubResource( 5 )
 max_value = 100.0
 default_value = 100.0
+
+[node name="inventory" type="Node" parent="."]
+script = SubResource( 6 )
