@@ -264,6 +264,12 @@ func _ready():
 #	pass
 
 
+# Returns an item stack
+# @return item stack
+func get_item_stack(item: String) -> Node:
+	return get_node(item)
+
+
 # Adds a new item stack (or adds to its amount)
 func add_item(item: String, amount: int):
 	if amount > 0:
