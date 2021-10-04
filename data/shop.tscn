@@ -1,0 +1,92 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://data/shop_item.tscn" type="PackedScene" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+
+# Shop
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 17:55
+# Defines the available items for sale.
+
+onready var buy: Node = $buy
+onready var sell: Node = $sell
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# Returns all items for sale.
+# @return all items for sale
+func items_for_sale():
+	return buy.get_children()
+
+
+# Returns an item for sale.
+# @param item
+# @return data
+func get_buy_item(item: String):
+	return buy.get_node(item)
+
+
+# Returns all items that can be sold.
+# @return all items for buy
+func items_for_buy():
+	return sell.get_children()
+
+
+# Returns an item for buy.
+# @param item
+# @return data
+func get_sell_item(item: String):
+	return sell.get_node(item)
+
+
+# Buys an item (if affordable)
+# @param item
+func buy(item: String):
+	var _item = get_buy_item(item)
+	if GameState.money.can_afford(_item.price):
+		GameState.money.add_balance(-_item.price)
+		GameState.inventory.add_item(item, 1)
+		# TODO: play buy sound
+
+
+# Sells the given item.
+# @param item
+func sell(item: String):
+	var _item = get_sell_item(item)
+	var stack = GameState.inventory.get_item_stack(item)
+	if stack and stack.amount > 0:
+		GameState.inventory.add_item(item, -1)
+		GameState.money.add_balance(_item.price)
+		# TODO: play sell sound
+"
+
+[node name="shop" type="Node"]
+script = SubResource( 1 )
+
+[node name="buy" type="Node" parent="."]
+
+[node name="test" parent="buy" instance=ExtResource( 1 )]
+price = 25.0
+
+[node name="multiuse" parent="buy" instance=ExtResource( 1 )]
+price = 50.0
+
+[node name="sand_bag" parent="buy" instance=ExtResource( 1 )]
+price = 30.0
+
+[node name="sell" type="Node" parent="."]
+
+[node name="droppable" parent="sell" instance=ExtResource( 1 )]
+price = 100.0

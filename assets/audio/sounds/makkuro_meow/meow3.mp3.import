@@ -2,12 +2,12 @@
 
 importer="mp3"
 type="AudioStreamMP3"
-path="res://.import/meow3.mp3-277023888a7933f0b0e391c9253b86c0.mp3str"
+path="res://.import/meow3.mp3-677a6cd0d64a1323cfa7b5ad8c90d3a5.mp3str"
 
 [deps]
 
-source_file="res://assets/Audio/Sounds/makkuro_meow/meow3.mp3"
-dest_files=[ "res://.import/meow3.mp3-277023888a7933f0b0e391c9253b86c0.mp3str" ]
+source_file="res://assets/audio/sounds/makkuro_meow/meow3.mp3"
+dest_files=[ "res://.import/meow3.mp3-677a6cd0d64a1323cfa7b5ad8c90d3a5.mp3str" ]
 
 [params]
 
