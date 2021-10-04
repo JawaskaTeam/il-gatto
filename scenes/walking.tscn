@@ -1,0 +1,115 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://assets/trash.png" type="Texture" id=1]
+[ext_resource path="res://animations/makkuro.tres" type="SpriteFrames" id=2]
+[ext_resource path="res://scripts/cat_walking.gd" type="Script" id=3]
+[ext_resource path="res://assets/near_background.png" type="Texture" id=4]
+[ext_resource path="res://assets/far_background.png" type="Texture" id=5]
+[ext_resource path="res://assets/sky_background.png" type="Texture" id=6]
+
+[sub_resource type="AtlasTexture" id=1]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 0, 80, 70 )
+
+[sub_resource type="AtlasTexture" id=2]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 70, 80, 70 )
+
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 140, 80, 70 )
+
+[sub_resource type="AtlasTexture" id=4]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 210, 80, 70 )
+
+[sub_resource type="AtlasTexture" id=5]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 280, 80, 70 )
+
+[sub_resource type="SpriteFrames" id=6]
+animations = [ {
+"frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+} ]
+
+[sub_resource type="CapsuleShape2D" id=7]
+radius = 37.4984
+
+[sub_resource type="CapsuleShape2D" id=8]
+radius = 29.359
+
+[node name="Node2D" type="Node2D"]
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="SkyLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2( 1440, 0 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBackground/SkyLayer"]
+position = Vector2( 726.563, 267.481 )
+scale = Vector2( 1.44601, 1.0126 )
+texture = ExtResource( 6 )
+
+[node name="FarLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_offset = Vector2( -5, 0 )
+motion_mirroring = Vector2( 1440, 0 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBackground/FarLayer"]
+position = Vector2( 721.284, 302.881 )
+scale = Vector2( 1.44497, 1.21613 )
+texture = ExtResource( 5 )
+
+[node name="NearLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2( 2, 2 )
+motion_mirroring = Vector2( 1440, 0 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBackground/NearLayer"]
+position = Vector2( 721.817, 309.598 )
+scale = Vector2( 1.44074, 1.22884 )
+texture = ExtResource( 4 )
+
+[node name="Trash" type="Node2D" parent="."]
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Trash"]
+position = Vector2( 899.653, 483.426 )
+frames = SubResource( 6 )
+animation = "idle"
+frame = 3
+playing = true
+centered = false
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Trash"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Trash/StaticBody2D"]
+position = Vector2( 943.002, 521.216 )
+shape = SubResource( 7 )
+
+[node name="Cat" type="Node2D" parent="."]
+script = ExtResource( 3 )
+velocity = 100.0
+
+[node name="cat animation" type="AnimatedSprite" parent="Cat"]
+position = Vector2( 85.2933, 528.496 )
+frames = ExtResource( 2 )
+animation = "idle"
+frame = 2
+playing = true
+
+[node name="Camera2D" type="Camera2D" parent="Cat"]
+anchor_mode = 0
+current = true
+
+[node name="KinematicBody2D" type="KinematicBody2D" parent="Cat"]
+position = Vector2( 9.34393, 1.33485 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cat/KinematicBody2D"]
+position = Vector2( 49.3884, 534.291 )
+shape = SubResource( 8 )
