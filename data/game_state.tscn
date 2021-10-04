@@ -14,6 +14,7 @@ script/source = "extends Node
 signal tick
 
 onready var tick: Timer = $tick
+onready var payday: Timer = $payday
 onready var date: Node = $date
 onready var health: Node = $health
 onready var hunger: Node = $hunger
@@ -315,12 +316,13 @@ script/source = "extends 'res://scripts/game_variable.gd'
 
 signal changed
 
+export (float) var paycheck
 var balance: float
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	GameState.get_node('payday').connect('timeout', self, '_on_pay_day')
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -350,12 +352,22 @@ func get_balance() -> float:
 # Whether the amount can be afforded.
 func can_afford(cost: float) -> bool:
 	return cost <= balance
+
+
+# Called when it's pay day.
+func _on_pay_day():
+	add_balance(paycheck)
+	# TODO: notify user
 "
 
 [node name="game_state" type="Node"]
 script = SubResource( 1 )
 
 [node name="tick" type="Timer" parent="."]
+
+[node name="payday" type="Timer" parent="."]
+wait_time = 120.0
+autostart = true
 
 [node name="date" type="Node" parent="."]
 script = SubResource( 2 )
@@ -413,3 +425,4 @@ script = SubResource( 6 )
 
 [node name="money" type="Node" parent="."]
 script = SubResource( 7 )
+paycheck = 10.0

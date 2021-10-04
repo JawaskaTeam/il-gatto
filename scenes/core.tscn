@@ -39,5 +39,5 @@ playing = true
 position = Vector2( 344.003, 141.131 )
 frames = ExtResource( 2 )
 animation = "turn"
-frame = 6
+frame = 2
 playing = true
