@@ -7,6 +7,7 @@ extends Node2D
 # An entity placed by the player from the inventory
 
 const IN_CLICK: String = 'click'
+const IN_CANCEL: String = 'cancel'
 
 var ghosted: bool
 var item: String # item type that spawned it
@@ -25,17 +26,21 @@ func _process(delta):
 
 
 func _input(event: InputEvent):
-	if event is InputEventMouseButton and event.is_action_pressed(IN_CLICK) and ghosted:
-		place()
+	if event is InputEventMouseButton and ghosted:
+		if event.is_action_pressed(IN_CLICK):
+			place()
+		elif event.is_action_pressed(IN_CANCEL):
+			queue_free() # remove itself
 
 
 # Makes the entity stop being a ghost and can't be picked up again.
 func place():
-	ghosted = false
-	modulate.a = 1
-	get_parent()._on_entity_placed(self)
-	get_parent().entities.push_back(name)
-	Items.get(item).place()
+	if not get_parent().entities.has(name):
+		ghosted = false
+		modulate.a = 1
+		get_parent()._on_entity_placed(self)
+		get_parent().entities.push_back(name)
+		Items.get(item).place()
 	
 
 
