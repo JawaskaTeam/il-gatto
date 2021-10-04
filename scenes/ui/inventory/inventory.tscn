@@ -17,7 +17,7 @@ onready var hub: Node2D = get_parent().get_parent()
 func _ready():
 	GameState.inventory.connect('item_added', self, '_on_item_added')
 	GameState.inventory.connect('items_cleared', self, '_on_items_cleared')
-	grid.columns = grid.get_size().x / 64
+	grid.columns = max(grid.get_size().x / 64, 1)
 	fill()
 
 
