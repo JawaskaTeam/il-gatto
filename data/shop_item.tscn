@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+
+# Shop item
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 17:48
+# Describes the buying and selling prices of an item-
+
+export (float) var price
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[node name="shop_item" type="Node"]
+script = SubResource( 1 )

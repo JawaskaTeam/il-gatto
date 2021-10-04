@@ -1,0 +1,98 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scenes/ui/shop/list.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/ui/shop/buy.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/ui/shop/sell.tscn" type="PackedScene" id=3]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends 'res://scripts/shop_list.gd'
+
+
+# Buy list
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 19:21
+# List of buyable items
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	items = Shop.items_for_sale()
+	._ready()
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends 'res://scripts/shop_list.gd'
+
+
+# Sell list
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 19:23
+# List of sellable items
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	items = Shop.items_for_buy()
+	._ready()
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[node name="shop" type="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="title" type="Label" parent="."]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 40.0
+margin_bottom = 14.0
+text = "Shop"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="tabs" type="Tabs" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 25.0
+margin_right = -5.0
+margin_bottom = -5.0
+
+[node name="container" type="TabContainer" parent="tabs"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+tab_align = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="buy" parent="tabs/container" instance=ExtResource( 1 )]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+script = SubResource( 1 )
+item = ExtResource( 2 )
+
+[node name="sell" parent="tabs/container" instance=ExtResource( 1 )]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+script = SubResource( 2 )
+item = ExtResource( 3 )
