@@ -29,4 +29,4 @@ func use(hub: Node2D):
 # Called by the interface to finally consume the item.
 # @param the clicked cat
 func consume(cat: Node2D):
-	pass
+	GameState.inventory.add_item(name, 1) # consume one item by default

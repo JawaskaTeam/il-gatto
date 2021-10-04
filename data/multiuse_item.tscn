@@ -20,6 +20,15 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+
+# @override
+func consume(cat: Node2D):
+	if uses > 0:
+		uses -= 1 # consume one use
+	else:
+		uses = Items.get(name).uses # replenish uses
+		GameState.inventory.add_item(name, 1) # consume one item
 "
 
 [node name="multiuse_item" type="Node"]
