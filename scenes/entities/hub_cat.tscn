@@ -25,9 +25,12 @@ onready var meows: Array = []
 onready var animation_variants: Dictionary = {
 	'idle': AnimationVariant.new('blink', 'meow', 'blink_meow')
 }
+
 onready var action_walk: Node = $walk
 onready var action_idle: Node = $idle
 onready var action_wait: Node = $wait_anim
+
+onready var litter_box: Node2D = get_parent().get_node('litter_box')
 
 export (float) var max_meow_delay # longest time without meowing
 export (float) var min_meow_delay # shortest time without meowing
@@ -390,7 +393,7 @@ shape = SubResource( 2 )
 [node name="sprite" type="AnimatedSprite" parent="."]
 frames = ExtResource( 1 )
 animation = "idle"
-frame = 2
+frame = 3
 playing = true
 
 [node name="meow_delay" type="Timer" parent="."]

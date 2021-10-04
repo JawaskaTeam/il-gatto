@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scenes/entities/hub_cat.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/ui/inventory/inventory.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/ui/shop/shop.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/entities/litter_box.tscn" type="PackedScene" id=4]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -39,10 +40,6 @@ func _on_entity_placed(entity):
 [node name="hub" type="Node2D"]
 script = SubResource( 1 )
 
-[node name="cat_roam" parent="." instance=ExtResource( 1 )]
-position = Vector2( 512, 300 )
-walk_speed = 100.0
-
 [node name="ui" type="Control" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
@@ -63,3 +60,10 @@ margin_left = 122.73
 margin_top = 140.162
 margin_right = 380.73
 margin_bottom = 385.162
+
+[node name="cat_roam" parent="." instance=ExtResource( 1 )]
+position = Vector2( 512, 300 )
+walk_speed = 100.0
+
+[node name="litter_box" parent="." instance=ExtResource( 4 )]
+position = Vector2( 79.6769, 526.819 )

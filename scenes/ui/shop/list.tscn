@@ -3,6 +3,7 @@
 [node name="scroll" type="ScrollContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+scroll_horizontal_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -10,3 +11,6 @@ __meta__ = {
 [node name="container" type="GridContainer" parent="."]
 custom_constants/vseparation = 64
 custom_constants/hseparation = 64
+__meta__ = {
+"_edit_use_anchors_": false
+}

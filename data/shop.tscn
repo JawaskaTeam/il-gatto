@@ -83,6 +83,9 @@ price = 25.0
 [node name="multiuse" parent="buy" instance=ExtResource( 1 )]
 price = 50.0
 
+[node name="sand_bag" parent="buy" instance=ExtResource( 1 )]
+price = 30.0
+
 [node name="sell" type="Node" parent="."]
 
 [node name="droppable" parent="sell" instance=ExtResource( 1 )]

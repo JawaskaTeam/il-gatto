@@ -1,0 +1,74 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://icon.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Sprite
+
+
+# Litter box
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 20:14
+# Used by the cat to relieve themselves.
+
+signal used
+signal cleaned
+
+onready var click_area: Button = $click_area
+
+export (String) var sand_item
+export (int) var max_uses
+var times_used: int
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	click_area.connect('button_down', self, '_on_click')
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# Adds filth and triggers the signal.
+func use():
+	times_used = min(times_used + 1, max_uses)
+	emit_signal('used')
+
+
+# Cleans the box and triggers the signal.
+func clean():
+	times_used = 0
+	emit_signal('cleaned')
+
+
+# Whether the cat feels comfortable using the litter box.
+# @return can the cat use it
+func can_be_used() -> bool:
+	return times_used < max_uses
+
+
+# Called when the area is clicked.
+func _on_click():
+	var stack = GameState.inventory.get_item_stack(sand_item)
+	if stack and times_used > 0:
+		GameState.inventory.add_item(sand_item, -1)
+		clean()
+		# TODO: play sound
+"
+
+[node name="litter_box" type="Sprite"]
+texture = ExtResource( 1 )
+script = SubResource( 1 )
+sand_item = "sand_bag"
+
+[node name="click_area" type="Button" parent="."]
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
