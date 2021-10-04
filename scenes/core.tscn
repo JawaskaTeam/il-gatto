@@ -6,12 +6,12 @@
 [node name="core" type="Node2D"]
 
 [node name="hub" parent="." instance=ExtResource( 1 )]
-position = Vector2( 512, 300 )
 
 [node name="alberto" type="AnimatedSprite" parent="."]
 position = Vector2( 107.053, 66.1117 )
 frames = ExtResource( 2 )
 animation = "idle"
+frame = 3
 playing = true
 
 [node name="jodete" type="AnimatedSprite" parent="."]
@@ -32,10 +32,12 @@ playing = true
 position = Vector2( 239.351, 141.838 )
 frames = ExtResource( 2 )
 animation = "meow"
+frame = 3
 playing = true
 
 [node name="la prox t enteras ajiaj" type="AnimatedSprite" parent="."]
 position = Vector2( 344.003, 141.131 )
 frames = ExtResource( 2 )
 animation = "turn"
+frame = 7
 playing = true

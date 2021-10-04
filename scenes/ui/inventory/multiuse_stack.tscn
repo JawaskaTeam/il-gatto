@@ -1,0 +1,58 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/ui/inventory/stack.tscn" type="PackedScene" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends 'res://scripts/stack_icon.gd'
+
+
+# Multi-use stack icon
+# @author Alberto Blanco Celdrán
+# @date 04/10/2021 11:34
+# Represents those item stacks that can be used multiple times.
+
+onready var bar: ColorRect = $foreground
+
+var uses: int
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	var stack = GameState.inventory.get_item_stack(item)
+	uses = stack.uses
+	stack.connect('used', self, '_on_uses_changed')
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# Called when the amount of uses remaining change.
+func _on_uses_changed(uses: int):
+	var max_uses = Items.get(item).uses
+	bar.set_width(40 * (uses/max_uses))
+"
+
+[node name="multiuse_stack" instance=ExtResource( 1 )]
+script = SubResource( 1 )
+
+[node name="background" type="ColorRect" parent="." index="3"]
+margin_left = 7.0
+margin_top = 54.0
+margin_right = 47.0
+margin_bottom = 59.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="foreground" type="ColorRect" parent="." index="4"]
+margin_left = 7.0
+margin_top = 54.0
+margin_right = 47.0
+margin_bottom = 59.0
+color = Color( 0.286275, 0.858824, 0.333333, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

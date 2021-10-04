@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/ui/inventory/multiuse_stack.tscn" type="PackedScene" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends 'res://scripts/item_stack.gd'
@@ -8,6 +10,8 @@ script/source = "extends 'res://scripts/item_stack.gd'
 # @author Alberto Blanco Celdrán
 # @date 04/10/2021 2:46
 # An item stack that can be used multiple times.
+
+signal used
 
 var uses: int
 
@@ -24,3 +28,4 @@ func _ready():
 
 [node name="multiuse_stack" type="Node"]
 script = SubResource( 1 )
+ui_slot = ExtResource( 1 )

@@ -8,7 +8,6 @@ extends Node
 
 signal amount_changed
 signal stack_removed
-signal stack_used
 
 export (PackedScene) var ui_slot # scene for the visual representation in the UI
 
@@ -17,7 +16,7 @@ var amount: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	pass
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -34,15 +33,10 @@ func add_amount(amount: int):
 	if self.amount <= 0:
 		remove()
 	else:
-		emit_signal('amount_changed')
+		emit_signal('amount_changed', self.amount)
 
 
 # Removes the current stack.
 func remove():
 	emit_signal('stack_removed')
 	queue_free()
-
-
-# Called when the item stack is used.
-func use():
-	emit_signal('stack_use', name)

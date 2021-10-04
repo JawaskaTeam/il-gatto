@@ -14,7 +14,7 @@ export (Texture) var icon
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	stack = load('res://scenes/data/item_stack.tscn')
+	stack = load('res://data/item_stack.tscn')
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/makkuro_blink.png" type="Texture" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -27,5 +29,35 @@ func get(item: String) -> Node:
 	return get_node(item)
 "
 
+[sub_resource type="GDScript" id=2]
+script/source = "extends 'res://scripts/item.gd'
+
+
+# Declare member variables here. Examples:
+# @date 04/10/2021 12:46
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+# Applies the effects of using the item.
+# @param the hub node
+func use(hub: Node2D):
+	GameState.inventory.add_item(name, -1)
+"
+
 [node name="items" type="Node"]
 script = SubResource( 1 )
+
+[node name="test" type="Node" parent="."]
+script = SubResource( 2 )
+print_name = "Test"
+icon = ExtResource( 1 )

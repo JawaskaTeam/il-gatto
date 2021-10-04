@@ -24,11 +24,13 @@ func _ready():
 
 # @override
 func consume(cat: Node2D):
-	if uses > 0:
-		uses -= 1 # consume one use
+	var stack = GameState.inventory.get_item_stack(name)
+	if stack.uses > 0:
+		stack.uses -= 1 # consume one use
 	else:
-		uses = Items.get(name).uses # replenish uses
-		GameState.inventory.add_item(name, 1) # consume one item
+		stack.uses = uses # replenish uses
+		GameState.inventory.add_item(name, -1) # consume one item
+	stack.emit_signal('used', stack.uses)
 "
 
 [node name="multiuse_item" type="Node"]
