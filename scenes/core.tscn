@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://scenes/hub.tscn" type="PackedScene" id=1]
 [ext_resource path="res://animations/makkuro.tres" type="SpriteFrames" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://sprites/icon_hygene.tres" type="Texture" id=10]
 [ext_resource path="res://sprites/icon_mood.tres" type="Texture" id=11]
 [ext_resource path="res://sprites/hearts.tres" type="Texture" id=12]
+[ext_resource path="res://assets/background.png" type="Texture" id=13]
 
 [node name="core" type="Node2D"]
 
@@ -25,7 +26,7 @@ texture = ExtResource( 3 )
 position = Vector2( 107.053, 66.1117 )
 frames = ExtResource( 2 )
 animation = "idle"
-frame = 2
+frame = 3
 playing = true
 
 [node name="jodete" type="AnimatedSprite" parent="."]
@@ -57,7 +58,7 @@ playing = true
 position = Vector2( 322.824, 157.335 )
 frames = ExtResource( 2 )
 animation = "turn"
-frame = 2
+frame = 7
 playing = true
 offset = Vector2( 25.5891, -14.3145 )
 
@@ -100,3 +101,8 @@ texture = ExtResource( 10 )
 [node name="icon_mood" type="Sprite" parent="."]
 position = Vector2( 449.106, 52.8359 )
 texture = ExtResource( 11 )
+
+[node name="background" type="Sprite" parent="."]
+position = Vector2( 256, 128 )
+z_index = -10
+texture = ExtResource( 13 )
