@@ -1,12 +1,15 @@
-extends 'res://scripts/item.gd'
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends 'res://scripts/item.gd'
 
 
-# Consumable item
+# Droppable item
 # @author Alberto Blanco Celdrán
-# @date 04/10/2021 2:07
-# An item that requires the user to tap the cat before using.
+# @date 04/10/2021
+# An item that will produce an entity upon being used at a certain position.
 
-onready var interface: PackedScene = load('res://scenes/ui/items/consumable.tscn')
+export (PackedScene) var placed_entity
 
 
 # Called when the node enters the scene tree for the first time.
@@ -21,12 +24,15 @@ func _ready():
 
 # @override
 func use(hub: Node2D):
-	var instance: Control = interface.instance()
+	var instance = placed_entity.instance()
 	instance.item = name
 	hub.add_child(instance)
 
 
 # Called by the interface to finally consume the item.
-# @param the clicked cat
-func consume(cat: Node2D):
+func place():
 	GameState.inventory.add_item(name, -1) # consume one item by default
+"
+
+[node name="droppable" type="Node"]
+script = SubResource( 1 )
